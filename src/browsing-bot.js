@@ -20,10 +20,11 @@ module.exports =  async function (linkAdress) {
     }
     
     isBrowsing = true;
-    const browser = await puppeteer.launch({ headless : false });
+    let browser = null;
 
     try
     {       
+        browser = await puppeteer.launch({ headless : false });
         const page = await browser.newPage();
   
         await page.goto(linkAdress);
