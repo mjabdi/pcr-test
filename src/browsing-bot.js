@@ -4,11 +4,7 @@ const shell = require('shelljs');
 const config = require('config');
 const logger = require('./utils/logger')();
 const path = require('path');
-const stream = require('stream');
-const fetch = require('node-fetch');
-const Blob = require('fetch-blob');
-const util = require('util');
-const streamPipeline = util.promisify(require('stream').pipeline);
+
 
 
 const downloadFolder = config.ChromeDownloadFolderPath;
@@ -30,10 +26,9 @@ module.exports =  async function (linkAdress) {
 
     try
     {       
-        browser = await puppeteer.launch({ headless : false, args:['--no-sandbox'] });
+        browser = await puppeteer.launch({ headless : false});
         const page = await browser.newPage();
-        await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3419.0 Safari/537.36');
-        
+
         await page.goto(linkAdress);
     
         await page.waitFor('input[name=tbEmail]');
@@ -58,17 +53,24 @@ module.exports =  async function (linkAdress) {
         const link2 = await page.$eval('div[id="headerButtons"] > a', a => a.href);
         logger.debug(`Actual Link : ` + link2);
 
+       
+        // const viewSource = await page.goto(link2);
+        // const buffer = await viewSource.buffer();
+        // fs.writeFileSync('d:/test.pdf', buffer);
+
         // const res = await page.evaluate( async () =>
         //     {
-        //         return fetch('https://secureemail.thelondonclinic.com/d/ec1c0c47e3a173d250df8617b57ca6ff/101/MEX-MCNULTY_65157805651.pdf', {
+        //         const link3 = await page.$eval('div[id="headerButtons"] > a', a => a.href);
+        //         return fetch(link3, {
         //             method: 'GET',
         //             credentials: 'include'
         //         }).then(async (res) => {
-        //             return await res.blob();
+        //             return await res.text();
         //         }
         //         );
         //     });
 
+        //     console.log(res);
           
  
         
