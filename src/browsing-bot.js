@@ -4,6 +4,12 @@ const shell = require('shelljs');
 const config = require('config');
 const logger = require('./utils/logger')();
 const path = require('path');
+const stream = require('stream');
+const fetch = require('node-fetch');
+const Blob = require('fetch-blob');
+const util = require('util');
+const streamPipeline = util.promisify(require('stream').pipeline);
+
 
 const downloadFolder = config.ChromeDownloadFolderPath;
 const destinationFolder = config.DownloadFolderPath;
@@ -24,9 +30,10 @@ module.exports =  async function (linkAdress) {
 
     try
     {       
-        browser = await puppeteer.launch({ headless : true, args:['--no-sandbox'] });
+        browser = await puppeteer.launch({ headless : false, args:['--no-sandbox'] });
         const page = await browser.newPage();
-  
+        await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3419.0 Safari/537.36');
+        
         await page.goto(linkAdress);
     
         await page.waitFor('input[name=tbEmail]');
@@ -47,6 +54,35 @@ module.exports =  async function (linkAdress) {
         await page.goto(link);
     
         await page.waitFor('div[id="headerButtons"]');
+
+        const link2 = await page.$eval('div[id="headerButtons"] > a', a => a.href);
+        logger.debug(`Actual Link : ` + link2);
+
+        // const res = await page.evaluate( async () =>
+        //     {
+        //         return fetch('https://secureemail.thelondonclinic.com/d/ec1c0c47e3a173d250df8617b57ca6ff/101/MEX-MCNULTY_65157805651.pdf', {
+        //             method: 'GET',
+        //             credentials: 'include'
+        //         }).then(async (res) => {
+        //             return await res.blob();
+        //         }
+        //         );
+        //     });
+
+          
+ 
+        
+         
+        
+
+           // streamPipeline(res, fs.createWriteStream('d:/octocat.pdf'));
+        //    const binary = Buffer.from(res, 'utf8').toString('base64');
+        //     logger.debug(res);
+            //fs.createWriteStream('d:/pppp.pdf').write(data);  
+
+        // const newBlob = new Blob([res.blob], { type: 'application/pdf' });    
+        // logger.debug(res);   
+
  
         await page.click('div[id="headerButtons"] > a');
     
