@@ -24,7 +24,7 @@ module.exports =  async function (linkAdress) {
 
     try
     {       
-        browser = await puppeteer.launch({ headless : false, args:['--no-sandbox'] });
+        browser = await puppeteer.launch({ headless : true, args:['--no-sandbox'] });
         const page = await browser.newPage();
   
         await page.goto(linkAdress);
