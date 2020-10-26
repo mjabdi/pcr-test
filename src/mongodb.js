@@ -9,12 +9,25 @@ module.exports = async function()
     {
         mongoose.connect(config.MongodbUrl,{useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
         .then(() => {
-            logger.info('Connected to MongoDB...');
-            resolve();
+            // logger.info('Connected to MongoDB...');
+            // resolve();
         })
         .catch(err => {
             logger.error("could not connect to MongoDB!");
             application.shutdown();
         });
+
+        const db = mongoose.connection;
+
+        
+        db.on('error', (err) =>  {
+            logger.error(`An Error Ocuured in MongoDB: ${err}`);
+          });
+
+        db.once('open', () =>  {
+            logger.info('Connected to MongoDB...');
+            resolve();
+          });
+
     } ); 
 }

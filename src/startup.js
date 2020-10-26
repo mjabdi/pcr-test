@@ -7,6 +7,7 @@ const linkSubscriber = require('./link-subscriber');
 const dbListener = require('./db-listener');
 const attachmentHandler = require('./attachment-handler');
 const mongodb = require('./mongodb');
+const {recoverFailedDownloads} = require('./db-recovery');
 
 let ready = false;
 
@@ -22,6 +23,7 @@ async function run()
 
     await mongodb();
 
+    await recoverFailedDownloads();
 
     mailListener.registerForIncommingMails(linkSubscriber.linkReceived);
 

@@ -37,11 +37,6 @@ const Link = mongoose.model('Link', new mongoose.Schema({
         default: false
     },
 
-    isSent: {
-        type: Boolean,
-        default: false
-    },
-
     surname: {
         type: String,
         required: false,
