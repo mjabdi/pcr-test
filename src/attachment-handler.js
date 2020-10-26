@@ -106,6 +106,16 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
                 });
             });
         }else{
+            const attachments = [
+                {
+                    path: pdfFilePath,
+                    filename: filename
+                }
+            ];
+            GenerateResultMail(options.forname,`Blood Test Result for ${options.forname}` , attachments).then( ()=>
+            {
+                logger.debug(`Blood Test Result Mail Sent : ${filename}`);
+            });
             Link.updateOne({_id: documentId} , {isPCR: false, status: 'done', filename: filename,  surname: options.surname, forename: options.forname}, function (err, doc){
                 if (err) {
                     logger.error(err);

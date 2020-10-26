@@ -1,13 +1,11 @@
-const { cat } = require('shelljs');
+const config = require('config');
 
 const sendMail = async (receiver, subject, content, attachments) =>
 {
 
     const send = require('gmail-send')({
-        // user: 'm.jafarabdi2@gmail.com',
-        // pass: 'baqimhtprmkkhepl',
-        user: `results@medicalexpressclinic.co.uk`,
-        pass: `nqpnhackfsqbzgxt`,
+        user: config.SendMailAccount,
+        pass: config.SendMailPassword,
         to:   receiver,
         subject: subject,
     });
