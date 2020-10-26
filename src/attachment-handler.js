@@ -12,6 +12,7 @@ const shell = require('shelljs');
 
 const pdfFolder = config.PDFResultsFolderPath;
 const emailto = config.TestReceiverMail;
+const emailtoOther = config.TestReceiverMailOther;
 
 attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
 
@@ -33,7 +34,7 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
                     }
                 ];
                 
-                GenerateResultMail(options.forname,`COVID-19 Result for ${options.forname}` , attachments).then( (result) => {
+                GenerateResultMail(emailto, options.forname,`COVID-19 Result for ${options.forname}` , attachments).then( (result) => {
 
                     if (result)
                     {
@@ -112,7 +113,7 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
                     filename: filename
                 }
             ];
-            GenerateResultMail(options.forname,`Blood Test Result for ${options.forname}` , attachments).then( ()=>
+            GenerateResultMail(emailtoOther, options.forname,`Blood Test Result for ${options.forname}` , attachments).then( ()=>
             {
                 logger.debug(`Blood Test Result Mail Sent : ${filename}`);
             });
@@ -136,7 +137,7 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
     });
 }
 
-async function GenerateResultMail(name, subject , attachments)
+async function GenerateResultMail(to, name, subject , attachments)
 {
     var content = `<p class="MsoNormal" style="margin:0in 0in 10pt;line-height:16.8667px">Dear ${name} <br></p>`;
     content += '<p class="MsoNormal" style="margin:0in 0in 10pt;line-height:16.8667px">We attached your laboratory result herewith for your perusal.<br></p>';
@@ -145,7 +146,7 @@ async function GenerateResultMail(name, subject , attachments)
     content += '<p class="MsoNormal" style="margin:0in 0in 10pt;line-height:16.8667px">Best Regards<br></p>';
     content += '<p class="MsoNormal" style="margin:0in 0in 10pt;line-height:16.8667px">Medical Express Clinic<br></p>';
      
-    const result = await sendMail(emailto, subject , content , attachments );
+    const result = await sendMail(to, subject , content , attachments );
     
     return result;
 }
