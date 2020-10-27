@@ -139,11 +139,11 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
 
 async function GenerateResultMail(to, name, subject , attachments)
 {
-    var content = `<p class="MsoNormal" style="margin:0in 0in 10pt;line-height:16.8667px">Dear ${name} <br></p>`;
-    content += '<p class="MsoNormal" style="margin:0in 0in 10pt;line-height:16.8667px">We attached your laboratory result herewith for your perusal.<br></p>';
-    content += '<p class="MsoNormal" style="margin:0in 0in 10pt;line-height:16.8667px">For further inquiries, please do not hesitate to contact us.<br><br></p>';
+    var content = `<p class="MsoNormal" style="margin:0in 0in 10pt;line-height:16.8667px">Dear ${name}, <br></p>`;
+    content += '<p class="MsoNormal" style="margin:0in 0in 10pt;line-height:16.8667px">Please find attached your laboratory report.<br></p>';
+    content += `<p class="MsoNormal" style="margin:0in 0in 10pt;line-height:16.8667px">For further assistance please don't hesitate to get in touch.<br><br></p>`;
     // content += '<p class="MsoNormal" style="margin:0in 0in 10pt;line-height:16.8667px">Have a safe flight!</p>';
-    content += '<p class="MsoNormal" style="margin:0in 0in 10pt;line-height:16.8667px">Best Regards<br></p>';
+    content += '<p class="MsoNormal" style="margin:0in 0in 10pt;line-height:16.8667px">Kind Regards,<br></p>';
     content += '<p class="MsoNormal" style="margin:0in 0in 10pt;line-height:16.8667px">Medical Express Clinic<br></p>';
      
     const result = await sendMail(to, subject , content , attachments );
