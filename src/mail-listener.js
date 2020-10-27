@@ -2,6 +2,7 @@ const mailListenerModule = {};
 var MailListener = require("mail-listener2");
 const config = require('config');
 const logger = require('./utils/logger')();
+const application = require('./utils/application');
 
 var mailListener = null;
 var isConnected = false;
@@ -50,11 +51,13 @@ mailListenerModule.registerForIncommingMails = (newLinkReceived) =>
   mailListener.on("server:disconnected", function(){
     isConnected = false;
     logger.info("disconnected from gmail");
+    application.shutdown();
   });
   
   mailListener.on("error", function(err){
     isConnected = false;
     logger.error(err);
+    application.shutdown();
   });
   
   mailListener.on("mail", function(mail, seqno, attributes){
