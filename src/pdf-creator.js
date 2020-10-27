@@ -30,7 +30,7 @@ const createPDF = async (options , filename) =>
             
             doc.fillColor('black').fontSize(10).font('Courier').text(`Surname`, 360, 140, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
             doc.fillColor('black').fontSize(10).font('Courier').text(`${options.surname}`, 420, 140, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
-            doc.fillColor('black').fontSize(10).font('Courier').text(`Forname`, 360, 155, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
+            doc.fillColor('black').fontSize(10).font('Courier').text(`Forename`, 360, 155, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
             doc.fillColor('black').fontSize(10).font('Courier').text(`${options.forname}`, 420, 155, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
             doc.fillColor('black').fontSize(10).font('Courier').text(`Title`, 360, 170, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
             doc.fillColor('black').fontSize(10).font('Courier').text(`${options.title}`, 420, 170, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
