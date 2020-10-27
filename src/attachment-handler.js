@@ -34,7 +34,7 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
                     }
                 ];
                 
-                GenerateResultMail(emailto, options.forname,`COVID-19 Result for ${options.forname}` , attachments).then( (result) => {
+                GenerateResultMail(emailto, options.forname,`COVID-19 Result for ${options.forname} ${options.surname} - ${options.collectedon.substring(0,10)}` , attachments).then( (result) => {
 
                     if (result)
                     {
@@ -113,7 +113,7 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
                     filename: filename
                 }
             ];
-            GenerateResultMail(emailtoOther, options.forname,`Blood Test Result for ${options.forname}` , attachments).then( ()=>
+            GenerateResultMail(emailtoOther, options.forname,`Blood Test Result for ${options.forname} ${options.surname} - ${options.collectedon.substring(0,10)}` , attachments).then( ()=>
             {
                 logger.debug(`Blood Test Result Mail Sent : ${filename}`);
             }).catch( (err) => logger.error(err));
