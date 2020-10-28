@@ -10,7 +10,7 @@ const Link = mongoose.model('Link', new mongoose.Schema({
     seqNo: {
         type: Number,
         required: true,
-        unique : true,
+        // unique : true,
     },
 
     status: {
