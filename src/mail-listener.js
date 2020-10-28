@@ -62,10 +62,10 @@ mailListenerModule.registerForIncommingMails = (newLinkReceived) =>
   
   mailListener.on("mail", function(mail, seqno, attributes){
 
-    if (seqno < lastSeqNo)
-    {
-      return;
-    }   
+    // if (seqno < lastSeqNo)
+    // {
+    //   return;
+    // }   
 
     lastSeqNo = seqno;
     
