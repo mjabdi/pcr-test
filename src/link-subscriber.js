@@ -19,7 +19,7 @@ linkSubscriberModule.linkReceived = (linkAddress, seq) =>
             }
             else
             {
-                const link = new Link( {rawLink : linkAddress , seqNo : seq});
+                const link = new Link( {rawLink : linkAddress , seqNo : seq, timeStamp: Date()});
                 link.save( (err, doc) =>
                 {
                     if (!err)
