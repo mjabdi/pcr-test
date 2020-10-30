@@ -58,7 +58,7 @@ const createPDF = async (options , filename) =>
             doc.fillColor('black').fontSize(10).font('Courier').text(`Novel CoronaVirus RNA (RT-PCR)`, 50, 335, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
             doc.fillColor('black').fontSize(10).font('Courier').text(`SARS-COV-2 (COVID-19) RNA`, 50, 350, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
            
-            if (options.toLowerCase() === 'negative')
+            if (options.negative.toLowerCase() === 'negative')
             {
                 doc.fillColor('green').fontSize(10).font('Courier-Bold').text(`${options.negative}`, 270, 350, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
             }
