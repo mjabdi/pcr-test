@@ -34,7 +34,7 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
                     }
                 ];
                 
-                GenerateResultMail(emailto, options.forname,`COVID-19 Result for ${options.forname} ${options.surname} - ${options.collectedon.substring(0,10)}` , attachments).then( (result) => {
+                GenerateResultMail(options, emailto, options.forname,`COVID-19 Result for ${options.forname} ${options.surname} - ${options.collectedon.substring(0,10)}` , attachments).then( (result) => {
 
                     if (result)
                     {
@@ -113,7 +113,7 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
                     filename: filename
                 }
             ];
-            GenerateResultMail(emailtoOther, options.forname,`Blood Test Result for ${options.forname} ${options.surname} - ${options.collectedon.substring(0,10)}` , attachments).then( ()=>
+            GenerateResultMail(options, emailtoOther, options.forname,`Blood Test Result for ${options.forname} ${options.surname} - ${options.collectedon.substring(0,10)}` , attachments).then( ()=>
             {
                 logger.debug(`Blood Test Result Mail Sent : ${filename}`);
             }).catch( (err) => logger.error(err));
@@ -137,7 +137,7 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
     });
 }
 
-async function GenerateResultMail(to, name, subject , attachments)
+async function GenerateResultMail(options, to, name, subject , attachments)
 {
     var content = `<p class="MsoNormal" style="margin:0in 0in 10pt;line-height:16.8667px">Dear ${name}, <br></p>`;
     content += '<p class="MsoNormal" style="margin:0in 0in 10pt;line-height:16.8667px">Please find attached your laboratory report.<br></p>';
@@ -146,7 +146,18 @@ async function GenerateResultMail(to, name, subject , attachments)
     content += '<p class="MsoNormal" style="margin:0in 0in 10pt;line-height:16.8667px">Kind Regards,<br></p>';
     content += '<p class="MsoNormal" style="margin:0in 0in 10pt;line-height:16.8667px">Medical Express Clinic<br></p>';
      
-    const result = await sendMail(to, subject , content , attachments );
+    if (options.isPCR && options.negative.toLowerCase() == 'positive')
+    {
+        subject = 'POSITIVE ' + subject;
+      
+        if (process.env.NODE_ENV.toLowerCase() == 'production')
+        {
+            await sendMail('info@medicalexpressclinic.co.uk', subject , content , attachments );
+            await sendMail('steve@medicalexpressclinic.co.uk', subject , content , attachments );
+        }
+    }
+
+    const result = await sendMail(to, subject , content , attachments ); 
     
     return result;
 }

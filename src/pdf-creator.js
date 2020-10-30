@@ -57,7 +57,16 @@ const createPDF = async (options , filename) =>
             
             doc.fillColor('black').fontSize(10).font('Courier').text(`Novel CoronaVirus RNA (RT-PCR)`, 50, 335, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
             doc.fillColor('black').fontSize(10).font('Courier').text(`SARS-COV-2 (COVID-19) RNA`, 50, 350, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
-            doc.fillColor('green').fontSize(10).font('Courier-Bold').text(`${options.negative}`, 270, 350, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
+           
+            if (options.toLowerCase() === 'negative')
+            {
+                doc.fillColor('green').fontSize(10).font('Courier-Bold').text(`${options.negative}`, 270, 350, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
+            }
+            else
+            {
+                doc.fillColor('red').fontSize(12).font('Courier-Bold').text(`${options.negative}`, 270, 350, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
+            }
+        
             doc.fillColor('black').fontSize(10).font('Courier').text(`This is a CE marked assay and has been verified for use.`, 50, 365, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
             doc.fillColor('black').fontSize(10).font('Courier').text(`The laboratory has applied to UKAS for it to be`, 50, 380, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
             doc.fillColor('black').fontSize(10).font('Courier').text(`added to its accredited test repertoire.`, 50, 395, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
