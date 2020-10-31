@@ -46,6 +46,11 @@ const Link = mongoose.model('Link', new mongoose.Schema({
         required: false,
     },
 
+    birthDate:{
+        type: String,
+        required: false
+    },
+
     result: {
         type: String,
         required: false,

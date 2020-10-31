@@ -44,6 +44,7 @@ module.exports = async function(filePath){
                         if (element.toLowerCase() === 'd.o.b')
                         {
                             options.dob = textArray[index + 1] + ' ' +  textArray[index + 2] + ' ' + textArray[index + 3];
+                            options.birthDate = options.dob.substring(0,10).replace('/','-').replace('/','-');
                         }   
     
                         if (element.toLowerCase() === 'mpi' && textArray[index + 1].toLowerCase() === 'no')
