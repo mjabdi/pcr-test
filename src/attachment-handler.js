@@ -64,7 +64,7 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
                 }
 
                 var recepients = [];
-                if (config.TestReceiverMailActive)
+                if (config.TestReceiverMailActive || (!booking))
                 {
                     recepients.push(emailto);
                 }
