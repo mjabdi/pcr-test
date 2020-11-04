@@ -38,7 +38,7 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
 
                     if (result)
                     {
-                        Link.updateOne({_id: documentId} , {isPCR: true, status: 'sent', filename: filename, surname: options.surname, forename: options.forname, birthDate: options.birthDate, result: options.negative}, function (err, doc){
+                        Link.updateOne({_id: documentId} , {isPCR: true, status: 'sent', filename: filename, surname: options.surname, forename: options.forname, birthDate: options.birthDate,testDate: options.testDate , result: options.negative}, function (err, doc){
                             if (err) {
                                 logger.error(err);
                             }
@@ -66,7 +66,7 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
                     }
                     else
                     {
-                        Link.updateOne({_id: documentId} , {isPCR: true, status: 'error_mail_send', filename: filename, surname: options.surname, forename: options.forname,birthDate: options.birthDate, result: options.negative}, function (err, doc){
+                        Link.updateOne({_id: documentId} , {isPCR: true, status: 'error_mail_send', filename: filename, surname: options.surname, forename: options.forname,birthDate: options.birthDate,testDate: options.testDate , result: options.negative}, function (err, doc){
                             if (err) {
                                 logger.error(err);
                             }
@@ -82,7 +82,7 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
                 }).catch( (err) =>
                 {
                     logger.error(err);
-                    Link.updateOne({_id: documentId} , {isPCR: true, status: 'error_mail_send', filename: filename, surname: options.surname, forename: options.forname, birthDate: options.birthDate,result: options.negative}, function (err, doc){
+                    Link.updateOne({_id: documentId} , {isPCR: true, status: 'error_mail_send', filename: filename, surname: options.surname, forename: options.forname, birthDate: options.birthDate,testDate: options.testDate ,result: options.negative}, function (err, doc){
                         if (err) {
                             logger.error(err);
                         }
@@ -117,7 +117,7 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
             {
                 logger.debug(`Blood Test Result Mail Sent : ${filename}`);
             }).catch( (err) => logger.error(err));
-            Link.updateOne({_id: documentId} , {isPCR: false, status: 'done', filename: filename,  surname: options.surname, forename: options.forname, birthDate: options.birthDate}, function (err, doc){
+            Link.updateOne({_id: documentId} , {isPCR: false, status: 'done', filename: filename,  surname: options.surname, forename: options.forname, birthDate: options.birthDate,testDate: options.testDate}, function (err, doc){
                 if (err) {
                     logger.error(err);
                 }

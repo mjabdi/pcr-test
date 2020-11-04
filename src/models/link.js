@@ -51,6 +51,11 @@ const Link = mongoose.model('Link', new mongoose.Schema({
         required: false
     },
 
+    testDate:{
+        type: String,
+        required: false
+    },
+
     result: {
         type: String,
         required: false,

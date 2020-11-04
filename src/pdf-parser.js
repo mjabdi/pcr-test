@@ -76,6 +76,7 @@ module.exports = async function(filePath){
                         if (element.toLowerCase() === 'collected' && textArray[index + 1].toLowerCase() === 'on')
                         {
                             options.collectedon = textArray[index + 2] + ' ' + textArray[index + 3] + ' ' + textArray[index + 4];
+                            options.testDate = `${options.collectedon.substr(6,4)}-${options.collectedon.substr(3,2)}-${options.collectedon.substr(0,2)}`;
                         } 
     
                         if (element.toLowerCase() === 'received' && textArray[index + 1].toLowerCase() === 'on')
