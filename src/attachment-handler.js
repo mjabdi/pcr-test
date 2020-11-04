@@ -7,8 +7,12 @@ const logger = require('./utils/logger')();
 const path = require('path');
 const sendMail = require('./mail-sender');
 const createPDF = require('./pdf-creator');
+const createCertificate = require('./certificate-creator');
 const fs = require('fs');
 const shell = require('shelljs');
+const {Booking} = require('./models/Booking');
+const { send } = require('process');
+const P = require('pino');
 
 const pdfFolder = config.PDFResultsFolderPath;
 const emailto = config.TestReceiverMail;
@@ -20,21 +24,57 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
 
     const filename = path.basename(pdfFilePath);
 
-    parsePDF(pdfFilePath).then( (options) => 
+    parsePDF(pdfFilePath).then( async (options) => 
     {
         if (options.isPCR){
 
             const newFilePath = path.join(pdfFolder, filename);
+            const certFilePath = path.join(pdfFolder,`certificate-${filename}`);
+
+            const booking = await Booking.findOne({ forenameCapital : options.forname, surnameCapital: options.surname, birthDate: options.birthDate});
+            
+            if (!booking)
+            {
+                await Link.updateOne({_id: documentId} , {emailNotFound: true});
+            }
+
+            var sendCert = false;
+
+            if (booking && booking.certificate && options.negative.toLowerCase() === 'negative')
+            {
+                await createCertificate(options, booking.passportNumber, certFilePath);
+                sendCert = true;
+            }
 
             createPDF(options , newFilePath).then( () => {
+
                 const attachments = [
                     {
                         path: newFilePath,
                         filename: filename
                     }
                 ];
+
+                if (sendCert)
+                {
+                    attachments.push({
+                        path: certFilePath,
+                        filename : `certificate-${filename}`
+                    });
+                }
+
+                var recepients = [];
+                if (config.TestReceiverMailActive)
+                {
+                    recepients.push(emailto);
+                }
+                if (booking)
+                {
+                    recepients.push(booking.email);
+                }
                 
-                GenerateResultMail(options, emailto, options.forname,`COVID-19 Result for ${options.forname} ${options.surname} - ${options.collectedon.substring(0,10)}` , attachments).then( (result) => {
+                
+                GenerateResultMail(options, recepients, options.forname,`COVID-19 Result for ${options.forname} ${options.surname} - ${options.collectedon.substring(0,10)}` , attachments).then( (result) => {
 
                     if (result)
                     {
@@ -140,17 +180,23 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
 async function GenerateResultMail(options, to, name, subject , attachments)
 {
     var content = `<p class="MsoNormal" style="margin:0in 0in 10pt;line-height:16.8667px">Dear ${name}, <br></p>`;
-    content += '<p class="MsoNormal" style="margin:0in 0in 10pt;line-height:16.8667px">Please find attached your laboratory report.<br></p>';
+    content += `<p class="MsoNormal" style="margin:0in 0in 10pt;line-height:16.8667px">Please find attached your laboratory report`;
+    if (attachments.length > 1)
+    {
+        content += ` and your requested certificate`;
+    }
+    
+    content += `.<br></p>`;
     content += `<p class="MsoNormal" style="margin:0in 0in 10pt;line-height:16.8667px">For further assistance please don't hesitate to get in touch.<br><br></p>`;
     // content += '<p class="MsoNormal" style="margin:0in 0in 10pt;line-height:16.8667px">Have a safe flight!</p>';
     content += '<p class="MsoNormal" style="margin:0in 0in 10pt;line-height:16.8667px">Kind Regards,<br></p>';
     content += '<p class="MsoNormal" style="margin:0in 0in 10pt;line-height:16.8667px">Medical Express Clinic<br></p>';
      
-    if (options.isPCR && options.negative.toLowerCase() == 'positive')
+    if (options.isPCR && options.negative.toLowerCase() === 'positive')
     {
         subject = 'POSITIVE ' + subject;
       
-        if (process.env.NODE_ENV.toLowerCase() == 'production')
+        if (process.env.NODE_ENV.toLowerCase() === 'production')
         {
             await sendMail('info@medicalexpressclinic.co.uk', subject , content , attachments );
             await sendMail('steve@medicalexpressclinic.co.uk', subject , content , attachments );

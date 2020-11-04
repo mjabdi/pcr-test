@@ -61,6 +61,11 @@ const Link = mongoose.model('Link', new mongoose.Schema({
         required: false,
     },
 
+    emailNotFound: {
+        type: Boolean,
+        required: false
+    }
+
 }));
 
 
