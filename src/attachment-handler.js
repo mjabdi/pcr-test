@@ -68,7 +68,7 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
                 {
                     recepients.push(emailto);
                 }
-                if (booking)
+                if (booking && options.negative.toLowerCase() === 'negative')
                 {
                     recepients.push(booking.email);
                 }
