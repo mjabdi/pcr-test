@@ -14,7 +14,7 @@ function capitalizeFirstLetter(str) {
   function parseDate(str)
   {
       var year = parseInt(str.substr(0,4));
-      var month = parseInt(str.substr(5,2));
+      var month = parseInt(str.substr(5,2)) - 1;
       var day = parseInt(str.substr(8,2));
       return new Date(year,month,day);
   }
@@ -40,11 +40,11 @@ const createCertificate = async (options, passportNumber , filename) =>
             doc.fillColor('black').fontSize(12).font('Times-Bold').text(`DOB: ${NormalizeDate(options.birthDate)}` , startX, startY + 75  ,{characterSpacing : 0.8, wordSpacing : 1 , lineGap : 2 } );
             doc.fillColor('black').fontSize(12).font('Times-Bold').text(`Passport Number: ${passportNumber}` , startX, startY + 100  ,{characterSpacing : 0.8, wordSpacing : 1 , lineGap : 2 } );
 
-            console.log(options.testDate);
-            const testDate = parseDate(options.testDate);
-            const customTestDate = dateFormat(testDate, 'd"th" mmmm yyyy');
+           
+            const today = new Date();
+            const customToday = dateFormat(today, 'dS mmmm yyyy');
 
-            doc.fillColor('black').fontSize(12).font('Times-Roman').text(`This is to confirm that the above person shown to be negative from the RT-PCR COVID-19 nasopharyngeal swab test on ${customTestDate}.` , 
+            doc.fillColor('black').fontSize(12).font('Times-Roman').text(`This is to confirm that the above person shown to be negative from the RT-PCR COVID-19 nasopharyngeal swab test on ${customToday}.` , 
                                                                 startX, startY + 150 ,{characterSpacing : 0.7, wordSpacing : 0.8 , lineGap : 4 } );
 
             doc.fillColor('black').fontSize(12).font('Times-Roman').text(`I heereby declare that the patient is fit for their booked journey.` , 
