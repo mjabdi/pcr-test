@@ -95,7 +95,19 @@ const Booking = mongoose.model('Booking', new mongoose.Schema({
     surnameCapital: {
         type: String,
         required: false
+    },
+    
+    bookingTimeNormalized : {
+        type: String,
+        required: false
+    },
+
+    status: {
+        type: String,
+        required: false,
+        default: 'booked'
     }
+
 }));
 
 

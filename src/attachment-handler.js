@@ -31,7 +31,7 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
             const newFilePath = path.join(pdfFolder, filename);
             const certFilePath = path.join(pdfFolder,`certificate-${filename}`);
 
-            const booking = await Booking.findOne({ forenameCapital : options.forname, surnameCapital: options.surname, birthDate: options.birthDate});
+            const booking = await Booking.findOne({ forenameCapital : options.forname, surnameCapital: options.surname, birthDate: options.birthDate, status:'took_the_test'}).sort({timeStamp : -1}).exec();
             
             if (!booking)
             {
@@ -78,6 +78,7 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
 
                     if (result)
                     {
+
                         Link.updateOne({_id: documentId} , {isPCR: true, status: 'sent', filename: filename, surname: options.surname, forename: options.forname, birthDate: options.birthDate,testDate: options.testDate , result: options.negative}, function (err, doc){
                             if (err) {
                                 logger.error(err);
@@ -85,6 +86,20 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
                             else
                             {
                                 logger.info(`file ${filename} successfully sent.`);
+                                if (booking)
+                                {
+                                    Booking.updateOne({_id: booking._id}, {status: 'report_sent'} , function(err2,doc2) {
+                                        if (err2) {
+                                            logger.error(err2);
+                                        }
+                                        else
+                                        {
+                                            //do nothing
+                                        }
+                                    });
+                                }
+                               
+
                             }
                         });
 
