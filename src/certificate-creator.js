@@ -19,7 +19,7 @@ function capitalizeFirstLetter(str) {
       return new Date(year,month,day);
   }
 
-const createCertificate = async (options, passportNumber , filename) =>
+const createCertificate = async (options, passportNumber, passportNumber2 , filename) =>
 {
 
     return new Promise( (resolve, reject) => 
@@ -38,7 +38,10 @@ const createCertificate = async (options, passportNumber , filename) =>
             
             doc.fillColor('black').fontSize(12).font('Times-Bold').text(`Re: ${capitalizeFirstLetter(options.title)} ${capitalizeFirstLetter(options.forname)} ${capitalizeFirstLetter(options.surname)}` , startX, startY + 50  ,{characterSpacing : 0.8, wordSpacing : 1 , lineGap : 2 } );
             doc.fillColor('black').fontSize(12).font('Times-Bold').text(`DOB: ${NormalizeDate(options.birthDate)}` , startX, startY + 75  ,{characterSpacing : 0.8, wordSpacing : 1 , lineGap : 2 } );
-            doc.fillColor('black').fontSize(12).font('Times-Bold').text(`Passport Number: ${passportNumber}` , startX, startY + 100  ,{characterSpacing : 0.8, wordSpacing : 1 , lineGap : 2 } );
+            doc.fillColor('black').fontSize(12).font('Times-Bold').text(`Passport Number: ` , startX, startY + 100  ,{characterSpacing : 0.8, wordSpacing : 1 , lineGap : 2 } );
+            doc.fillColor('black').fontSize(12).font('Times-Bold').text(`${passportNumber}` , startX + 115, startY + 100  ,{characterSpacing : 0.8, wordSpacing : 1 , lineGap : 2 } );
+            if (passportNumber2 && passportNumber2.length > 0)
+             doc.fillColor('black').fontSize(12).font('Times-Bold').text(`${passportNumber2}` , startX + 115, startY + 120  ,{characterSpacing : 0.8, wordSpacing : 1 , lineGap : 2 } );
 
            
             const today = new Date();

@@ -42,7 +42,7 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
 
             if (booking && booking.certificate && options.negative.toLowerCase() === 'negative')
             {
-                await createCertificate(options, booking.passportNumber, certFilePath);
+                await createCertificate(options, booking.passportNumber, booking.passportNumber2 , certFilePath);
                 sendCert = true;
             }
 

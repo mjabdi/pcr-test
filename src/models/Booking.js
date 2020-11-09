@@ -66,6 +66,11 @@ const Booking = mongoose.model('Booking', new mongoose.Schema({
         type: String,
         required: false,
     },
+
+    passportNumber2: {
+        type: String,
+        required: false,
+    },
     
     bookingDate: {
         type: String,
