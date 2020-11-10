@@ -28,8 +28,10 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
     {
         if (options.isPCR){
 
+            const certFilename = `certificate-${filename}`;
+
             const newFilePath = path.join(pdfFolder, filename);
-            const certFilePath = path.join(pdfFolder,`certificate-${filename}`);
+            const certFilePath = path.join(pdfFolder, certFilename);
 
             const booking = await Booking.findOne({ forenameCapital : options.forname, surnameCapital: options.surname, birthDate: options.birthDate, status:'took_the_test'}).sort({timeStamp : -1}).exec();
             
@@ -59,7 +61,7 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
                 {
                     attachments.push({
                         path: certFilePath,
-                        filename : `certificate-${filename}`
+                        filename : certFilename
                     });
                 }
 
@@ -112,6 +114,22 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
                             else
                             {
                                 shell.mv(newFilePath, sentFilePath);
+                            }
+                        }
+                        catch(err)
+                        {
+                            logger.error(err);
+                        }
+
+                        try{
+                            const sentCertFilePath = path.join(pdfFolder, 'certs', certFilename);
+                            if (fs.existsSync(sentCertFilePath))
+                            {
+                                shell.rm('-f' , [certFilePath]);
+                            }
+                            else
+                            {
+                                shell.mv(certFilePath, sentCertFilePath);
                             }
                         }
                         catch(err)
