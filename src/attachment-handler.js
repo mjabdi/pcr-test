@@ -90,7 +90,7 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
                                 logger.info(`file ${filename} successfully sent.`);
                                 if (booking)
                                 {
-                                    Booking.updateOne({_id: booking._id}, {status: 'report_sent'} , function(err2,doc2) {
+                                    Booking.updateOne({_id: booking._id}, {status: 'report_sent', filename: filename} , function(err2,doc2) {
                                         if (err2) {
                                             logger.error(err2);
                                         }

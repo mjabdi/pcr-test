@@ -111,6 +111,11 @@ const Booking = mongoose.model('Booking', new mongoose.Schema({
         type: String,
         required: false,
         default: 'booked'
+    },
+
+    filename: {
+        type: String,
+        required: false,     
     }
 
 }));
