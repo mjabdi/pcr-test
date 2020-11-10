@@ -32,35 +32,67 @@ const createCertificate = async (options, passportNumber, passportNumber2 , file
         
             doc.image('assets/certificate-template.png', 0, 0,  {fit: [615, 800], align: 'center', valign: 'top'});
 
+
+            doc.fillColor('black').fontSize(18).font('Times-Roman').text(`MEDICAL CERTIFICATE OF FITNESS TO FLY` , 100, 135  ,{characterSpacing : 0.8, wordSpacing : 1 , lineGap : 2} );
+            doc.moveTo(100, 150).lineTo(500, 150).stroke('black'); 
+
             const startX = 80;
-            const startY = 200;
-            doc.fillColor('black').fontSize(12).font('Times-Roman').text(`To Whom this may concern` , startX, startY  ,{characterSpacing : 0.8, wordSpacing : 1 , lineGap : 2 } );
+            const startY = 220;
+            doc.fillColor('black').fontSize(12).font('Times-Roman').text(`To Whom This May Concern,` , startX, startY  ,{characterSpacing : 0.8, wordSpacing : 1 , lineGap : 2 } );
             
-            doc.fillColor('black').fontSize(12).font('Times-Bold').text(`Re: ${capitalizeFirstLetter(options.title)} ${capitalizeFirstLetter(options.forname)} ${capitalizeFirstLetter(options.surname)}` , startX, startY + 50  ,{characterSpacing : 0.8, wordSpacing : 1 , lineGap : 2 } );
-            doc.fillColor('black').fontSize(12).font('Times-Bold').text(`DOB: ${NormalizeDate(options.birthDate)}` , startX, startY + 75  ,{characterSpacing : 0.8, wordSpacing : 1 , lineGap : 2 } );
-            doc.fillColor('black').fontSize(12).font('Times-Bold').text(`Passport Number: ` , startX, startY + 100  ,{characterSpacing : 0.8, wordSpacing : 1 , lineGap : 2 } );
-            doc.fillColor('black').fontSize(12).font('Times-Bold').text(`${passportNumber}` , startX + 115, startY + 100  ,{characterSpacing : 0.8, wordSpacing : 1 , lineGap : 2 } );
+            doc.fillColor('black').fontSize(18).font('Times-Bold').text(`${capitalizeFirstLetter(options.title)} ${capitalizeFirstLetter(options.forname)} ${capitalizeFirstLetter(options.surname)}` 
+                                                                        , startX + 120, startY + 40  ,{characterSpacing : 0.8, wordSpacing : 1 , lineGap : 2 } );
+            doc.fillColor('black').fontSize(18).font('Times-Bold').text(`DOB: ${NormalizeDate(options.birthDate)}` ,
+                                                                         startX + 130, startY + 70  ,{characterSpacing : 0.8, wordSpacing : 1 , lineGap : 2 } );
+            doc.fillColor('black').fontSize(12).font('Times-Bold').text(`Passport Number: ` 
+                                                                        , startX + 125, startY + 110  ,{characterSpacing : 0.5, wordSpacing : 0.8 , lineGap : 2 } );
+            
+            var passportStr = `${passportNumber}` ;                                                          
             if (passportNumber2 && passportNumber2.length > 0)
-             doc.fillColor('black').fontSize(12).font('Times-Bold').text(`${passportNumber2}` , startX + 115, startY + 120  ,{characterSpacing : 0.8, wordSpacing : 1 , lineGap : 2 } );
+            {
+                passportStr = `${passportNumber}  /  ${passportNumber2}`
+            }
+
+            
+            doc.fillColor('black').fontSize(12).font('Times-Bold').text(`${passportStr}`
+                                                                         , startX + 235, startY + 110  ,{characterSpacing : 0.8, wordSpacing : 1 , lineGap : 2 } );
+
+                                                    
+           
+            const today = parseDate(options.testDate);
+            const customToday = dateFormat(today, 'dd/mm/yy');
+
+            doc.fillColor('black').fontSize(12).font('Times-Bold').text(`Date of Test: ${customToday}` 
+                                                      , startX + 140, startY + 125  ,{characterSpacing : 0.5, wordSpacing : 0.5 , lineGap : 2 } );
+
+
+            doc.fillColor('black').fontSize(12).font('Times-Roman').text(`This is to confirm that the above person shown to be` , 
+                                                                       startX, startY + 160 ,{characterSpacing : 0.7, wordSpacing : 2 , lineGap : 1} );
+          
+            doc.fillColor('black').fontSize(12).font('Times-Bold').text(`negative` , 
+                                                                        startX + 315, startY + 160 ,{characterSpacing : 0.7, wordSpacing : 2 , lineGap : 1} );
+
+            doc.fillColor('black').fontSize(12).font('Times-Roman').text(`from their` , 
+                                                                        startX + 370, startY + 160 ,{characterSpacing : 0.7, wordSpacing : 2 , lineGap : 1} );
+
+                                                                        
+            doc.fillColor('black').fontSize(12).font('Times-Roman').text(`RT-PCR COVID-19 nasopharyngeal swab test performed at the Medical Express` , 
+                                                          startX - 15, startY + 180 ,{characterSpacing : 0.7, wordSpacing : 2 , lineGap : 1} );
+
+            doc.fillColor('black').fontSize(12).font('Times-Roman').text(`Clinic of 117a Harley Street, Marylebone, London.` , 
+                                                          startX + 70, startY + 200 ,{characterSpacing : 0.7, wordSpacing : 2 , lineGap : 1} );
+
+            doc.fillColor('black').fontSize(11).font('Times-Roman').text(`I hearby declare the above named patient is fit-to-fly for their booked journey.` , 
+                                                          startX + 20, startY + 240 ,{characterSpacing : 0.7, wordSpacing : 0.8 , lineGap : 1} );
 
            
-            const today = new Date();
-            const customToday = dateFormat(today, 'dS mmmm yyyy');
-
-            doc.fillColor('black').fontSize(12).font('Times-Roman').text(`This is to confirm that the above person shown to be negative from the RT-PCR COVID-19 nasopharyngeal swab test on ${customToday}.` , 
-                                                                startX, startY + 150 ,{characterSpacing : 0.7, wordSpacing : 0.8 , lineGap : 4 } );
-
-            doc.fillColor('black').fontSize(12).font('Times-Roman').text(`I heereby declare that the patient is fit for their booked journey.` , 
-                                                                        startX, startY + 200 ,{characterSpacing : 0.7, wordSpacing : 0.8 , lineGap : 4 } );
-
-           
-            doc.image('assets/signature.png',  startX + 10, startY + 270 , {scale: 0.4});
+            doc.image('assets/signature.png',  startX , startY + 350 , {scale: 0.4});
 
             doc.fillColor('black').fontSize(12).font('Times-Roman').text(`Yours faithfully,` , 
-                                           startX, startY + 250 ,{characterSpacing : 0.7, wordSpacing : 0.8 , lineGap : 4 } );
+                                           startX, startY + 290 ,{characterSpacing : 0.7, wordSpacing : 0.8 , lineGap : 4 } );
 
             doc.fillColor('black').fontSize(12).font('Times-Roman').text(`Dr Mohammad Bakhtiar` , 
-                                                                     startX, startY + 310 ,{characterSpacing : 0.7, wordSpacing : 0.8 , lineGap : 4 } );
+                                                                     startX, startY + 400 ,{characterSpacing : 0.7, wordSpacing : 0.8 , lineGap : 4 } );
 
             doc.end();
     

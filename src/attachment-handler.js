@@ -20,8 +20,6 @@ const emailtoOther = config.TestReceiverMailOther;
 
 attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
 
-    logger.debug(`attachmentHandlerModule.handleAttachment called with ${pdfFilePath}`);
-
     const filename = path.basename(pdfFilePath);
 
     parsePDF(pdfFilePath).then( async (options) => 
@@ -109,12 +107,11 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
                             const sentFilePath = path.join(pdfFolder, 'sent', filename);
                             if (fs.existsSync(sentFilePath))
                             {
-                                shell.rm('-f' , [newFilePath]);
+                                shell.rm('-f' , [sentFilePath]);
                             }
-                            else
-                            {
-                                shell.mv(newFilePath, sentFilePath);
-                            }
+
+                            shell.mv(newFilePath, sentFilePath);
+
                         }
                         catch(err)
                         {
@@ -125,12 +122,11 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
                             const sentCertFilePath = path.join(pdfFolder, 'certs', certFilename);
                             if (fs.existsSync(sentCertFilePath))
                             {
-                                shell.rm('-f' , [certFilePath]);
+                                shell.rm('-f' , [sentCertFilePath]);
                             }
-                            else
-                            {
-                                shell.mv(certFilePath, sentCertFilePath);
-                            }
+                            
+                            shell.mv(certFilePath, sentCertFilePath);
+ 
                         }
                         catch(err)
                         {
