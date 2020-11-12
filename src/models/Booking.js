@@ -116,7 +116,12 @@ const Booking = mongoose.model('Booking', new mongoose.Schema({
     filename: {
         type: String,
         required: false,     
-    }
+    },
+
+    antiBodyTest: {
+        type: Boolean,
+        default: false
+    },
 
 }));
 

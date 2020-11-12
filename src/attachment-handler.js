@@ -31,7 +31,7 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
             const newFilePath = path.join(pdfFolder, filename);
             const certFilePath = path.join(pdfFolder, certFilename);
 
-            const booking = await Booking.findOne({ forenameCapital : options.forname, surnameCapital: options.surname, birthDate: options.birthDate, status:'took_the_test'}).sort({timeStamp : -1}).exec();
+            const booking = await Booking.findOne({ forenameCapital : options.forname, surnameCapital: options.surname, birthDate: options.birthDate, status:'sample_taken'}).sort({timeStamp : -1}).exec();
             
             if (!booking)
             {
@@ -88,7 +88,14 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
                                 logger.info(`file ${filename} successfully sent.`);
                                 if (booking)
                                 {
-                                    Booking.updateOne({_id: booking._id}, {status: 'report_sent', filename: filename} , function(err2,doc2) {
+                                    var sentStatus = 'report_sent';
+                                    if (booking.certificate)
+                                    {
+                                        sentStatus = 'report_cert_sent';
+                                    }
+
+
+                                    Booking.updateOne({_id: booking._id}, {status: sentStatus, filename: filename} , function(err2,doc2) {
                                         if (err2) {
                                             logger.error(err2);
                                         }
