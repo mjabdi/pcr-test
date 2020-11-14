@@ -31,7 +31,7 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
             const newFilePath = path.join(pdfFolder, filename);
             const certFilePath = path.join(pdfFolder, certFilename);
 
-            const booking = await Booking.findOne({ forenameCapital : options.forname, surnameCapital: options.surname, birthDate: options.birthDate, status:'sample_taken'}).sort({timeStamp : -1}).exec();
+            const booking = await Booking.findOne({ forenameCapital : options.forname, surnameCapital: options.surname, birthDate: options.birthDate}).sort({timeStamp : -1}).exec();
             
             if (!booking)
             {
