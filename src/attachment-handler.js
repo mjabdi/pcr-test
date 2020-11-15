@@ -37,6 +37,10 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
             {
                 await Link.updateOne({_id: documentId} , {emailNotFound: true});
             }
+            else
+            {
+                await Link.updateOne({_id: documentId} , {emailNotFound: false});
+            }
 
             var sendCert = false;
 
