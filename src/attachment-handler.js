@@ -41,11 +41,13 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
                     booking = await Booking.findOne({ forenameCapital : fornamePart1, surnameCapital: options.surname, birthDate: options.birthDate}).sort({timeStamp : -1}).exec();
                     if (booking)
                     {
-                        options.forename = fornamePart1;
+                        options.forname = fornamePart1;
                     }
                 }
 
             }
+
+           
           
           
             if (!booking)
