@@ -31,8 +31,23 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
             const newFilePath = path.join(pdfFolder, filename);
             const certFilePath = path.join(pdfFolder, certFilename);
 
-            const booking = await Booking.findOne({ forenameCapital : options.forname, surnameCapital: options.surname, birthDate: options.birthDate}).sort({timeStamp : -1}).exec();
+            var booking = await Booking.findOne({ forenameCapital : options.forname, surnameCapital: options.surname, birthDate: options.birthDate}).sort({timeStamp : -1}).exec();
             
+            if (!booking)
+            {
+                if (options.forname.indexOf(' ') > 0)
+                {
+                    const fornamePart1 =  options.forname.substr(0, options.forname.indexOf(' '));
+                    booking = await Booking.findOne({ forenameCapital : fornamePart1, surnameCapital: options.surname, birthDate: options.birthDate}).sort({timeStamp : -1}).exec();
+                    if (booking)
+                    {
+                        options.forename = fornamePart1;
+                    }
+                }
+
+            }
+          
+          
             if (!booking)
             {
                 await Link.updateOne({_id: documentId} , {emailNotFound: true});
