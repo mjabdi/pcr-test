@@ -101,6 +101,11 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
                                         sentStatus = 'report_cert_sent';
                                     }
 
+                                    if (options.negative.toLowerCase() !== 'negative')
+                                    {
+                                        sentStatus = `positive`;
+                                    }
+
 
                                     Booking.updateOne({_id: booking._id}, {status: sentStatus, filename: filename} , function(err2,doc2) {
                                         if (err2) {
