@@ -40,7 +40,7 @@ const createCertificate = async (options, passportNumber, passportNumber2 , file
             const startY = 220;
             doc.fillColor('black').fontSize(12).font('Times-Roman').text(`To Whom This May Concern,` , startX, startY  ,{characterSpacing : 0.8, wordSpacing : 1 , lineGap : 2 } );
             
-            doc.fillColor('black').fontSize(18).font('Times-Bold').text(`${capitalizeFirstLetter(options.title)} ${capitalizeFirstLetter(options.forname)} ${capitalizeFirstLetter(options.surname)}` 
+            doc.fillColor('black').fontSize(18).font('Times-Bold').text(`${capitalizeFirstLetter(options.title.toUpperCase())} ${capitalizeFirstLetter(options.forname.toUpperCase())} ${capitalizeFirstLetter(options.surname.toUpperCase())}` 
                                                                         , startX + 120, startY + 40  ,{characterSpacing : 0.8, wordSpacing : 1 , lineGap : 2 } );
             doc.fillColor('black').fontSize(18).font('Times-Bold').text(`DOB: ${NormalizeDate(options.birthDate)}` ,
                                                                          startX + 130, startY + 70  ,{characterSpacing : 0.8, wordSpacing : 1 , lineGap : 2 } );
