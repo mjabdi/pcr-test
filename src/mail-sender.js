@@ -1,12 +1,13 @@
 const config = require('config');
 
-const sendMail = async (receiver, subject, content, attachments) =>
+const sendMail = async (receiver, bcc, subject, content, attachments) =>
 {
 
     const send = require('gmail-send')({
         user: config.SendMailAccount,
         pass: config.SendMailPassword,
         to:   receiver,
+        bcc:  bcc,
         subject: subject,
     });
 

@@ -86,7 +86,7 @@ const createCertificate = async (options, passportNumber, passportNumber2 , file
                                                           startX + 20, startY + 240 ,{characterSpacing : 0.7, wordSpacing : 0.8 , lineGap : 1} );
 
            
-            doc.image('assets/signature.png',  startX , startY + 350 , {scale: 0.4});
+            doc.image('assets/signature.png',  startX , startY + 340 , {scale: 0.6});
 
             doc.fillColor('black').fontSize(12).font('Times-Roman').text(`Yours faithfully,` , 
                                            startX, startY + 290 ,{characterSpacing : 0.7, wordSpacing : 0.8 , lineGap : 4 } );

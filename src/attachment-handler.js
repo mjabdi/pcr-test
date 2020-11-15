@@ -64,7 +64,14 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
                 }
 
                 var recepients = [];
-                if (config.TestReceiverMailActive || (!booking))
+                var bcc = null;
+
+                if (config.TestReceiverMailActive && booking)
+                {
+                    bcc = emailto;
+                }
+                
+                if (!booking)
                 {
                     recepients.push(emailto);
                 }
@@ -74,7 +81,7 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
                 }
                 
                 
-                GenerateResultMail(options, recepients, options.forname,`COVID-19 Result for ${options.forname} ${options.surname} - ${options.collectedon.substring(0,10)}` , attachments).then( (result) => {
+                GenerateResultMail(options, recepients, bcc, options.forname,`COVID-19 Result for ${options.forname} ${options.surname} - ${options.collectedon.substring(0,10)}` , attachments).then( (result) => {
 
                     if (result)
                     {
@@ -189,7 +196,7 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
                     filename: filename
                 }
             ];
-            GenerateResultMail(options, emailtoOther, options.forname,`Blood Test Result for ${options.forname} ${options.surname} - ${options.collectedon.substring(0,10)}` , attachments).then( ()=>
+            GenerateResultMail(options, emailtoOther,null ,options.forname,`Blood Test Result for ${options.forname} ${options.surname} - ${options.collectedon.substring(0,10)}` , attachments).then( ()=>
             {
                 logger.debug(`Blood Test Result Mail Sent : ${filename}`);
             }).catch( (err) => logger.error(err));
@@ -213,7 +220,7 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
     });
 }
 
-async function GenerateResultMail(options, to, name, subject , attachments)
+async function GenerateResultMail(options, to , bcc, name, subject , attachments)
 {
     var content = `<p class="MsoNormal" style="margin:0in 0in 10pt;line-height:16.8667px">Dear ${name}, <br></p>`;
     content += `<p class="MsoNormal" style="margin:0in 0in 10pt;line-height:16.8667px">Please find attached your laboratory report`;
@@ -234,12 +241,12 @@ async function GenerateResultMail(options, to, name, subject , attachments)
       
         if (process.env.NODE_ENV.toLowerCase() === 'production')
         {
-            await sendMail('info@medicalexpressclinic.co.uk', subject , content , attachments );
-            await sendMail('steve@medicalexpressclinic.co.uk', subject , content , attachments );
+            await sendMail('info@medicalexpressclinic.co.uk',null, subject , content , attachments );
+            await sendMail('steve@medicalexpressclinic.co.uk',null, subject , content , attachments );
         }
     }
 
-    const result = await sendMail(to, subject , content , attachments ); 
+    const result = await sendMail(to, bcc, subject , content , attachments ); 
     
     return result;
 }
