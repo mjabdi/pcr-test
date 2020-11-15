@@ -19,11 +19,19 @@ module.exports = async function(filePath){
      
                 if (!err && !item)
                 {
+                    console.log(textArray);
+
                     textArray.forEach( (element , index) => {
     
                         if (element.toLowerCase() === 'surname')
                         {
                             options.surname = textArray[index + 1];
+                            var i = index + 2;
+                            while (textArray[i].toLowerCase() != 'medical')
+                            {
+                                options.surname += (' ' + textArray[i]);
+                                i++;
+                            }
                         }   
                         if (element.toLowerCase() === 'forename')
                         {
