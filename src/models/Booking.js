@@ -132,9 +132,15 @@ const Booking = mongoose.model('Booking', new mongoose.Schema({
         type: Boolean,
         required: true,
         default: false
+    },
+
+    extRef: {
+        type: String,
+        required: true,
+        default: 'not-set'
     }
 
 }));
 
 
-exports.Booking = Booking;  
+exports.Booking = Booking; 

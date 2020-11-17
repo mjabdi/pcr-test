@@ -33,10 +33,9 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
 
             var booking = null;
 
-            if (options.extref && options.extref.length === 15)
+            if (options.extref && options.extref.length > 2)
             {
-                const bookRef = `${options.extref.substr(2,3)}-${options.extref.substr(5,3)}-${options.extref.substr(8,3)}`;
-                booking = await Booking.findOne({ bookingRef: bookRef, birthDate: options.birthDate, deleted : {$ne : true }}).sort({timeStamp : -1}).exec();
+                booking = await Booking.findOne({ extRef: options.extref, birthDate: options.birthDate, deleted : {$ne : true }}).sort({timeStamp : -1}).exec();
                 if (booking)
                 {
                     options.forname = booking.forenameCapital;
