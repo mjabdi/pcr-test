@@ -19,6 +19,15 @@ function capitalizeFirstLetter(str) {
       return new Date(year,month,day);
   }
 
+  const NormalizeDatePassword = (str) =>
+{
+    const year = str.substr(0,4);
+    const month = str.substr(5,2);
+    const day = str.substr(8,2);
+
+    return `${day}${month}${year}`;
+}
+
 const createCertificate = async (options, passportNumber, passportNumber2 , filename) =>
 {
 
@@ -26,7 +35,22 @@ const createCertificate = async (options, passportNumber, passportNumber2 , file
     {
         try
         {
-            const doc = new PDFDocument;
+            const pdfOptions = {
+                userPassword : NormalizeDatePassword(options.birthDate),
+                ownerPassword : 'QXp1cmXEaWFtb45kOmh1bnRlcjO',
+                permissions :
+                {
+                    printing : 'highResolution',
+                    modifying : false,
+                    copying : false,
+                    annotating : false,
+                    fillingForms : false,
+                    contentAccessibility : false,
+                    documentAssembly : false
+                },
+                pdfVersion : '1.7ext3'
+            }
+            const doc = new PDFDocument(pdfOptions);
             const stream = fs.createWriteStream(filename);
             doc.pipe(stream);
         

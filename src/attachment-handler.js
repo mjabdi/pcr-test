@@ -31,7 +31,23 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
             const newFilePath = path.join(pdfFolder, filename);
             const certFilePath = path.join(pdfFolder, certFilename);
 
-            var booking = await Booking.findOne({ forenameCapital : options.forname, surnameCapital: options.surname, birthDate: options.birthDate, deleted : {$ne : true }}).sort({timeStamp : -1}).exec();
+            var booking = null;
+
+            if (options.extref && options.extref.length === 15)
+            {
+                const bookRef = `${options.extref.substr(2,3)}-${options.extref.substr(5,3)}-${options.extref.substr(8,3)}`;
+                booking = await Booking.findOne({ bookingRef: bookRef, birthDate: options.birthDate, deleted : {$ne : true }}).sort({timeStamp : -1}).exec();
+                if (booking)
+                {
+                    options.forname = booking.forenameCapital;
+                    options.surname = booking.surnameCapital;
+                }
+            }
+           
+            if (!booking)
+            {
+                booking = await Booking.findOne({ forenameCapital : options.forname, surnameCapital: options.surname, birthDate: options.birthDate, deleted : {$ne : true }}).sort({timeStamp : -1}).exec();
+            }
             
             if (!booking)
             {
@@ -47,8 +63,6 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
 
             }
 
-           
-          
           
             if (!booking)
             {
@@ -65,6 +79,11 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
             {
                 await createCertificate(options, booking.passportNumber, booking.passportNumber2 , certFilePath);
                 sendCert = true;
+            }
+
+            if (booking)
+            {
+                options.bookingId = booking._id;
             }
 
             createPDF(options , newFilePath).then( () => {
@@ -248,18 +267,54 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
 
 async function GenerateResultMail(options, to , bcc, name, subject , attachments)
 {
-    var content = `<p class="MsoNormal" style="margin:0in 0in 10pt;line-height:16.8667px">Dear ${name}, <br></p>`;
-    content += `<p class="MsoNormal" style="margin:0in 0in 10pt;line-height:16.8667px">Please find attached your laboratory report`;
-    if (attachments.length > 1)
+    var content = ``;
+    content += `<div style="padding: '25px 0 10px 0'; width: 80%; font-size: 16px; line-height: 25px; font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif;text-align: justify;color: #111 !important;">`
+
+    content += `<img style="margin:10px" src="https://www.medicalexpressclinic.co.uk/public/design/images/medical-express-clinic-logo.png" alt="Medical Express Clinic - private clinic London">`;
+
+    content += `<p>Dear ${name}, </p>`;
+
+    var reportLink = '#';
+    var certLink = '#';
+
+    if (options.bookingId)
     {
-        content += ` and your requested certificate`;
+        reportLink = `https://travelpcrtest.com/download/pdf/downloadpdfresult?id=${options.bookingId}`;
+        certLink = `https://travelpcrtest.com/download/pdf/downloadpdfcert?id=${options.bookingId}`;
     }
+
+
+    content += `<p>Please find attached results which for your privacy is password protected.</p>`;
+    content += `<p>The password is your date of birth as <strong>DDMMYYYY</strong></p>`;
+    content += `<p>You can also download your results report by clicking the link here : </p>`;
+    content += `<p style="font-size:14px;">( PLEASE MAKE SURE YOU USE, YOUR DOB AS <strong>DDMMYYYY</strong> )</p>`;
     
-    content += `.<br></p>`;
-    content += `<p class="MsoNormal" style="margin:0in 0in 10pt;line-height:16.8667px">For further assistance please don't hesitate to get in touch.<br><br></p>`;
-    // content += '<p class="MsoNormal" style="margin:0in 0in 10pt;line-height:16.8667px">Have a safe flight!</p>';
-    content += '<p class="MsoNormal" style="margin:0in 0in 10pt;line-height:16.8667px">Kind Regards,<br></p>';
-    content += '<p class="MsoNormal" style="margin:0in 0in 10pt;line-height:16.8667px">Medical Express Clinic<br></p>';
+    content += `<div style="padding: '25px 0 10px 0'; margin-top: 20px; margin-bottom:20px ; font-size: 16px; line-height: 25px; font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif;text-align: left;color: #111 !important;">`;
+
+    if (options.bookingId)
+    {
+        content += `<p> <a href="${reportLink}" target="_blank"> Download Laboratory Report </a> </p>`;
+
+        if (attachments.length > 1)
+        {
+            content += `<p> <a href="${certLink}" target="_blank"> Download Certificate </a> </p>`;
+        }
+    }
+
+
+    content += '</div>';
+  
+ 
+    content += `<p>For further assistance please don't hesitate to get in touch.</p>`;
+
+    content += `<p>Kind Regards,</p>`;
+    content += `<p>Medical Express Clinic</p>`;
+    content += '</div>'
+
+    content += `<div style="padding: '25px 0 10px 0'; margin-top:10px; font-size: 14px; font-weight: 600 ;line-height: 25px; font-family: sans-serif;text-align: center ;color: #000;">`;
+    content += '<hr>'
+    content += '***   If you believe you have received this email in error, please delete it and notify info@medicalexpressclinic.co.uk  ***'
+    content+= `</div>`
      
     if (options.isPCR && options.negative.toLowerCase() === 'positive')
     {

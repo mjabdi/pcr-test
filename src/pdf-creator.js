@@ -2,7 +2,14 @@ const PDFDocument = require('pdfkit');
 const fs = require('fs');
 var dateFormat = require('dateformat');
 
+const NormalizeDatePassword = (str) =>
+{
+    const year = str.substr(0,4);
+    const month = str.substr(5,2);
+    const day = str.substr(8,2);
 
+    return `${day}${month}${year}`;
+}
 
 const createPDF = async (options , filename) =>
 {
@@ -11,7 +18,22 @@ const createPDF = async (options , filename) =>
     {
         try
         {
-            const doc = new PDFDocument;
+            const pdfOptions = {
+                userPassword : NormalizeDatePassword(options.birthDate),
+                ownerPassword : 'QXp1cmXEaWFtb45kOmh1bnRlcjO',
+                permissions :
+                {
+                    printing : 'highResolution',
+                    modifying : false,
+                    copying : false,
+                    annotating : false,
+                    fillingForms : false,
+                    contentAccessibility : false,
+                    documentAssembly : false
+                },
+                pdfVersion : '1.7ext3'
+            }
+            const doc = new PDFDocument(pdfOptions);
             const stream = fs.createWriteStream(filename);
             doc.pipe(stream);
         
