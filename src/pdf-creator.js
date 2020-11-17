@@ -20,7 +20,7 @@ const createPDF = async (options , filename) =>
         {
             const pdfOptions = {
                 userPassword : NormalizeDatePassword(options.birthDate),
-                ownerPassword : 'QXp1cmXEaWFtb45kOmh1bnRlcjO',
+                ownerPassword : 'mecpcr117',
                 permissions :
                 {
                     printing : 'highResolution',
