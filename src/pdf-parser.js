@@ -19,7 +19,7 @@ module.exports = async function(filePath){
      
                 if (!err && !item)
                 {
-                    // console.log(textArray);
+                     //console.log(textArray);
 
                     textArray.forEach( (element , index) => {
     
@@ -37,7 +37,7 @@ module.exports = async function(filePath){
                         {
                             options.forname = textArray[index + 1];
                             var i = index + 2;
-                            while (textArray[i].toLowerCase() != 'emailed')
+                            while (textArray[i] && (textArray[i].toLowerCase() !== 'medical' || (textArray[i].toLowerCase() !== 'emailed'))
                             {
                                 options.forname += (' ' + textArray[i]);
                                 i++;
