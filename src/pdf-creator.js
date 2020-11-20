@@ -31,7 +31,7 @@ const createPDF = async (options , filename) =>
                     contentAccessibility : false,
                     documentAssembly : false
                 },
-                pdfVersion : '1.7ext3'
+                // pdfVersion : '1.7ext3'
             }
             const doc = new PDFDocument(pdfOptions);
             const stream = fs.createWriteStream(filename);
