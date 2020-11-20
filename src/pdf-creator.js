@@ -38,60 +38,68 @@ const createPDF = async (options , filename) =>
             doc.pipe(stream);
         
             doc.image('assets/logo.JPG', 400, 20,  {scale: 0.4});
+            doc.image('assets/londonclinic.png', 70, 80,  {scale: 0.6});
             
             doc.fillColor('green').fontSize(13)//.font('Helvetica')
                .text('Pathology Report', {characterSpacing : 1.5}, 38,0);
             
             doc.fillColor('grey').fontSize(10).font('Courier').text('T: 020 7616 7755');  
             doc.fillColor('grey').fontSize(10).font('Courier').text('F: 020 7616 7681');
-            doc.moveDown(2);
-            doc.fillColor('black').fontSize(10).font('Courier').text('THE LONDON CLINIC PATHOLOGY REPORT', {characterSpacing : 1, wordSpacing : 1.5 , align : 'center'} );
+           
+            doc.fillColor('black').fontSize(10).font('Courier').text('THE LONDON CLINIC PATHOLOGY REPORT', 190, 120, {characterSpacing : 1, wordSpacing : 1.5 , align : 'left'} );
+            doc.fillColor('black').fontSize(10).font('Courier').text('Direct Line: 020 7646 7755', 190, 135, {characterSpacing : 1, wordSpacing : 1.5 , align : 'left'} );
+            doc.fillColor('black').fontSize(10).font('Courier').text(' Email: path7@thelondonclinic.co.uk', 190, 150, {characterSpacing : 1, wordSpacing : 1.5 , align : 'left'} );
+
+           
             
-            doc.fillColor('black').fontSize(10).font('Courier').text('Medical Express', {characterSpacing : 1, wordSpacing : 1.5 , lineGap : 2 } , 170, 50 );
-            doc.fillColor('black').fontSize(10).font('Courier').text('emailed Report', {characterSpacing : 1, wordSpacing : 1.5 });
+            doc.fillColor('black').fontSize(10).font('Courier').text('Medical Express', 75, 200 ,{characterSpacing : 1, wordSpacing : 1.5 , lineGap : 2 } );
+            doc.fillColor('black').fontSize(10).font('Courier').text('Medical Express Clinic',75, 215, {characterSpacing : 1, wordSpacing : 1.5 });
+            doc.fillColor('black').fontSize(10).font('Courier').text('117a Harley Street', 75, 230, {characterSpacing : 1, wordSpacing : 1.5 });
+            doc.fillColor('black').fontSize(10).font('Courier').text('London', 75, 245, {characterSpacing : 1, wordSpacing : 1.5 });
+            doc.fillColor('black').fontSize(10).font('Courier').text('W1G 6AT', 75, 260, {characterSpacing : 1, wordSpacing : 1.5 });
             
-            doc.fillColor('black').fontSize(10).font('Courier').text(`Surname`, 360, 140, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
-            doc.fillColor('black').fontSize(10).font('Courier').text(`${options.surname}`, 420, 140, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
-            doc.fillColor('black').fontSize(10).font('Courier').text(`Forename`, 360, 155, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
-            doc.fillColor('black').fontSize(10).font('Courier').text(`${options.forname}`, 420, 155, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
-            doc.fillColor('black').fontSize(10).font('Courier').text(`Title`, 360, 170, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
-            doc.fillColor('black').fontSize(10).font('Courier').text(`${options.title}`, 420, 170, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
-            doc.fillColor('black').fontSize(10).font('Courier').text(`D.O.B`, 360, 185, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
-            doc.fillColor('black').fontSize(10).font('Courier').text(`${options.dob}`, 420, 185, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
-            doc.fillColor('black').fontSize(10).font('Courier').text(`MPI No`, 360, 200, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
-            doc.fillColor('black').fontSize(10).font('Courier').text(`${options.mpino}`, 420, 200, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
-            doc.fillColor('black').fontSize(10).font('Courier').text(`Location`, 360, 215, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
-            doc.fillColor('black').fontSize(10).font('Courier').text(`${options.location}`, 420, 215, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
-            doc.fillColor('black').fontSize(10).font('Courier').text(`Ext Ref`, 360, 230, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
-            doc.fillColor('black').fontSize(10).font('Courier').text(`${options.extref}`, 420, 230, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
+            doc.fillColor('black').fontSize(10).font('Courier').text(`Surname`, 360, 185, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
+            doc.fillColor('black').fontSize(10).font('Courier').text(`${options.surname}`, 420, 185, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
+            doc.fillColor('black').fontSize(10).font('Courier').text(`Forename`, 360, 200, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
+            doc.fillColor('black').fontSize(10).font('Courier').text(`${options.forname}`, 420, 200, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
+            doc.fillColor('black').fontSize(10).font('Courier').text(`Title`, 360, 215, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
+            doc.fillColor('black').fontSize(10).font('Courier').text(`${options.title}`, 420, 215, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
+            doc.fillColor('black').fontSize(10).font('Courier').text(`D.O.B`, 360, 230, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
+            doc.fillColor('black').fontSize(10).font('Courier').text(`${options.dob}`, 420, 230, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
+            doc.fillColor('black').fontSize(10).font('Courier').text(`MPI No`, 360, 245, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
+            doc.fillColor('black').fontSize(10).font('Courier').text(`${options.mpino}`, 420, 245, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
+            doc.fillColor('black').fontSize(10).font('Courier').text(`Location`, 360, 260, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
+            doc.fillColor('black').fontSize(10).font('Courier').text(`${options.location}`, 420, 260, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
+            doc.fillColor('black').fontSize(10).font('Courier').text(`Ext Ref`, 360, 275, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
+            doc.fillColor('black').fontSize(10).font('Courier').text(`${options.extref}`, 420, 275, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
             
-            doc.moveTo(50, 250).lineTo(550, 250).stroke(); 
+            doc.moveTo(50, 300).lineTo(550, 300).stroke(); 
             
-            doc.fillColor('black').fontSize(10).font('Courier').text(`Collected on`, 280, 265, {characterSpacing : 1, wordSpacing : 1 , lineGap : 2 }  );
-            doc.fillColor('black').fontSize(10).font('Courier').text(`${options.collectedon}`, 380, 265, {characterSpacing : 1, wordSpacing : 1 , lineGap : 2 }  );
-            doc.fillColor('black').fontSize(10).font('Courier').text(`Received on`, 280, 280, {characterSpacing : 1, wordSpacing : 1 , lineGap : 2 }  );
-            doc.fillColor('black').fontSize(10).font('Courier').text(`${options.receivedon}`, 380, 280, {characterSpacing : 1, wordSpacing : 1 , lineGap : 2 }  );
-            doc.fillColor('black').fontSize(10).font('Courier').text(`Lab.No`, 280, 295, {characterSpacing : 1, wordSpacing : 1 , lineGap : 2 }  );
-            doc.fillColor('black').fontSize(10).font('Courier').text(`${options.labno}`, 380, 295, {characterSpacing : 1, wordSpacing : 1 , lineGap : 2 }  );
-            doc.fillColor('black').fontSize(10).font('Courier').text(`Sample: ${options.sample}`, 280, 310, {characterSpacing : 1, wordSpacing : 1 , lineGap : 2 }  );
+            doc.fillColor('black').fontSize(10).font('Courier').text(`Collected on`, 280, 310, {characterSpacing : 1, wordSpacing : 1 , lineGap : 2 }  );
+            doc.fillColor('black').fontSize(10).font('Courier').text(`${options.collectedon}`, 380, 310, {characterSpacing : 1, wordSpacing : 1 , lineGap : 2 }  );
+            doc.fillColor('black').fontSize(10).font('Courier').text(`Received on`, 280, 325, {characterSpacing : 1, wordSpacing : 1 , lineGap : 2 }  );
+            doc.fillColor('black').fontSize(10).font('Courier').text(`${options.receivedon}`, 380, 325, {characterSpacing : 1, wordSpacing : 1 , lineGap : 2 }  );
+            doc.fillColor('black').fontSize(10).font('Courier').text(`Lab.No`, 280, 340, {characterSpacing : 1, wordSpacing : 1 , lineGap : 2 }  );
+            doc.fillColor('black').fontSize(10).font('Courier').text(`${options.labno}`, 380, 340, {characterSpacing : 1, wordSpacing : 1 , lineGap : 2 }  );
+            doc.fillColor('black').fontSize(10).font('Courier').text(`Sample: ${options.sample}`, 280, 355, {characterSpacing : 1, wordSpacing : 1 , lineGap : 2 }  );
             
-            doc.moveTo(50, 330).lineTo(550, 330).stroke(); 
+            doc.moveTo(50, 375).lineTo(550, 375).stroke(); 
             
-            doc.fillColor('black').fontSize(10).font('Courier').text(`Novel CoronaVirus RNA (RT-PCR)`, 50, 335, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
-            doc.fillColor('black').fontSize(10).font('Courier').text(`SARS-COV-2 (COVID-19) RNA`, 50, 350, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
+            doc.fillColor('black').fontSize(10).font('Courier').text(`Novel CoronaVirus RNA (RT-PCR)`, 50, 390, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
+            doc.fillColor('black').fontSize(10).font('Courier').text(`SARS-COV-2 (COVID-19) RNA`, 50, 405, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
            
             if (options.negative.toLowerCase() === 'negative')
             {
-                doc.fillColor('green').fontSize(10).font('Courier-Bold').text(`${options.negative}`, 270, 350, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
+                doc.fillColor('green').fontSize(10).font('Courier-Bold').text(`${options.negative}`, 270, 405, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
             }
             else
             {
-                doc.fillColor('red').fontSize(12).font('Courier-Bold').text(`${options.negative}`, 270, 350, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
+                doc.fillColor('red').fontSize(12).font('Courier-Bold').text(`${options.negative}`, 270, 405, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
             }
         
-            doc.fillColor('black').fontSize(10).font('Courier').text(`This is a CE marked assay and has been verified for use.`, 50, 365, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
-            doc.fillColor('black').fontSize(10).font('Courier').text(`The laboratory has applied to UKAS for it to be`, 50, 380, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
-            doc.fillColor('black').fontSize(10).font('Courier').text(`added to its accredited test repertoire.`, 50, 395, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
+            doc.fillColor('black').fontSize(10).font('Courier').text(`This is a CE marked assay and has been verified for use.`, 50, 420, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
+            doc.fillColor('black').fontSize(10).font('Courier').text(`The laboratory has applied to UKAS for it to be`, 50, 435, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
+            doc.fillColor('black').fontSize(10).font('Courier').text(`added to its accredited test repertoire.`, 50, 450, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
             
             doc.fillColor('black').fontSize(9).font('Courier').text(`Reported on ${options.reportedon}    Run number ${options.runno}   MECON ${options.mecon}`, 50, 610, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
             doc.fillColor('black').fontSize(9).font('Courier').text(`Authorised on behalf of Consultant Pathologist`, 50, 625, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
@@ -107,7 +115,7 @@ const createPDF = async (options , filename) =>
             {
                 /// Draw the Stamp
                 const x = 300;
-                const y = 430;
+                const y = 480;
                 const width = 200;
                 const height = 80;
                 color = 'grey';
