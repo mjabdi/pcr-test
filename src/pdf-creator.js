@@ -37,14 +37,14 @@ const createPDF = async (options , filename) =>
             const stream = fs.createWriteStream(filename);
             doc.pipe(stream);
         
-            doc.image('assets/logo.JPG', 400, 20,  {scale: 0.4});
+            // doc.image('assets/logo.JPG', 400, 20,  {scale: 0.4});
             doc.image('assets/londonclinic.png', 70, 80,  {scale: 0.6});
             
-            doc.fillColor('green').fontSize(13)//.font('Helvetica')
-               .text('Pathology Report', {characterSpacing : 1.5}, 38,0);
+            // doc.fillColor('green').fontSize(13)//.font('Helvetica')
+            //    .text('Pathology Report', {characterSpacing : 1.5}, 38,0);
             
-            doc.fillColor('grey').fontSize(10).font('Courier').text('T: 020 7616 7755');  
-            doc.fillColor('grey').fontSize(10).font('Courier').text('F: 020 7616 7681');
+            // doc.fillColor('grey').fontSize(10).font('Courier').text('T: 020 7616 7755');  
+            // doc.fillColor('grey').fontSize(10).font('Courier').text('F: 020 7616 7681');
            
             doc.fillColor('black').fontSize(10).font('Courier').text('THE LONDON CLINIC PATHOLOGY REPORT', 190, 120, {characterSpacing : 1, wordSpacing : 1.5 , align : 'left'} );
             doc.fillColor('black').fontSize(10).font('Courier').text('Direct Line: 020 7646 7755', 190, 135, {characterSpacing : 1, wordSpacing : 1.5 , align : 'left'} );
