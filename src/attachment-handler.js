@@ -11,9 +11,8 @@ const createCertificate = require('./certificate-creator');
 const fs = require('fs');
 const shell = require('shelljs');
 const {Booking} = require('./models/Booking');
-const { send } = require('process');
-const P = require('pino');
-const { link } = require('pdfkit/js/mixins/annotations');
+
+
 
 const pdfFolder = config.PDFResultsFolderPath;
 const emailto = config.TestReceiverMail;
