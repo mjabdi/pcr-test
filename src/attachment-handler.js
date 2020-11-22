@@ -13,6 +13,7 @@ const shell = require('shelljs');
 const {Booking} = require('./models/Booking');
 const { send } = require('process');
 const P = require('pino');
+const { link } = require('pdfkit/js/mixins/annotations');
 
 const pdfFolder = config.PDFResultsFolderPath;
 const emailto = config.TestReceiverMail;
@@ -21,6 +22,8 @@ const emailtoOther = config.TestReceiverMailOther;
 attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
 
     const filename = path.basename(pdfFilePath);
+
+    const linkRecord = await Link.findOne({_id: documentId, emailNotFound: true});
 
     parsePDF(pdfFilePath).then( async (options) => 
     {
@@ -32,6 +35,16 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
             const certFilePath = path.join(pdfFolder, certFilename);
 
             var booking = null;
+
+            if (linkRecord.extRef && linkRecord.extRef.length > 2)
+            {
+                const bookingMatched = await Booking.findOne({ extRef: linkRecord.extRef , deleted : {$ne : true }}).sort({timeStamp : -1}).exec();
+                if (bookingMatched)
+                {
+                    options.extref = linkRecord.extRef;
+                    options.birthDate = bookingMatched.birthDate;
+                }
+           }
 
             if (options.extref && options.extref.length > 2)
             {
