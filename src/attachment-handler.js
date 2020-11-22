@@ -23,11 +23,13 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
 
     const filename = path.basename(pdfFilePath);
 
-    const linkRecord = await Link.findOne({_id: documentId, emailNotFound: true});
+   
 
     parsePDF(pdfFilePath).then( async (options) => 
     {
         if (options.isPCR){
+
+            const linkRecord = await Link.findOne({_id: documentId, emailNotFound: true});
 
             const certFilename = `certificate-${filename}`;
 
