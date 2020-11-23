@@ -329,9 +329,9 @@ async function GenerateResultMail(options, to , bcc, name, subject , attachments
 
     content += `<div style="padding: '25px 0 10px 0'; margin-top: 20px; margin-bottom:20px ; font-size: 16px; line-height: 25px; font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif;text-align: left;color: #111 !important;">`;
     
-    content += `<p>trust pilot: <a href="${'https://uk.trustpilot.com/review/www.medicalexpressclinic.co.uk'}" target="_blank"> https://uk.trustpilot.com/review/www.medicalexpressclinic.co.uk </a> </p>`;
+    content += `<p><a href="${'https://uk.trustpilot.com/review/www.medicalexpressclinic.co.uk'}" target="_blank"> trust pilot </a> </p>`;
 
-    content += `<p>google review link: <a href="${'https://www.google.com/search?gs_ssp=eJwFwVEOgyAMANDsd7sEP37bhoYKR9glFlKKIUM0YjaO73vP17zOeH0d02eBR5hg0MIOY0Ikl222KcCwRKzC0aJ4AM_vadNUJFaj4zi1dyO1tCKm7i3tzZz6K_rvN5DQHDk&q=medical+express+clinic+london+reviews&oq=medical+&aqs=chrome.1.69i57j46i39i175i199j69i60l5j69i65.2146j0j7&sourceid=chrome&ie=UTF-8#lrd=0x48761ad1146f3f3d:0x3447ec7a31c90097,3'}" target="_blank"> https://www.google.com/search?gs_ssp=eJwFwVEOgyAMANDsd7sEP37bhoYKR9glFlKKIUM0YjaO73vP17zOeH0d02eBR5hg0MIOY0Ikl222KcCwRKzC0aJ4AM_vadNUJFaj4zi1dyO1tCKm7i3tzZz6K_rvN5DQHDk&q=medical+express+clinic+london+reviews&oq=medical+&aqs=chrome.1.69i57j46i39i175i199j69i60l5j69i65.2146j0j7&sourceid=chrome&ie=UTF-8#lrd=0x48761ad1146f3f3d:0x3447ec7a31c90097,3 </a> </p>`;
+    content += `<p><a href="${'https://www.google.com/search?gs_ssp=eJwFwVEOgyAMANDsd7sEP37bhoYKR9glFlKKIUM0YjaO73vP17zOeH0d02eBR5hg0MIOY0Ikl222KcCwRKzC0aJ4AM_vadNUJFaj4zi1dyO1tCKm7i3tzZz6K_rvN5DQHDk&q=medical+express+clinic+london+reviews&oq=medical+&aqs=chrome.1.69i57j46i39i175i199j69i60l5j69i65.2146j0j7&sourceid=chrome&ie=UTF-8#lrd=0x48761ad1146f3f3d:0x3447ec7a31c90097,3'}" target="_blank"> google review link </a> </p>`;
 
 
     content += '</div>';
