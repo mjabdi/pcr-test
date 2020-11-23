@@ -28,7 +28,7 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
     {
         if (options.isPCR){
 
-            const linkRecord = await Link.findOne({_id: documentId, emailNotFound: true});
+            const linkRecord = await Link.findOne({_id: documentId});
 
             const certFilename = `certificate-${filename}`;
 
@@ -130,7 +130,15 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
                 }
                 if (booking && options.negative.toLowerCase() === 'negative')
                 {
-                    recepients.push(booking.email);
+                    if (linkRecord.dontSendEmail)
+                    {
+                        //do nothing
+                    }
+                    else
+                    {
+                        recepients.push(booking.email);
+                    }
+                   
                 }
                 
                 

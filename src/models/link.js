@@ -74,6 +74,11 @@ const Link = mongoose.model('Link', new mongoose.Schema({
     extRef: {
         type: String,
         required: false
+    },
+
+    dontSendEmail: {
+        type: Boolean,
+        required: false
     }
 
 }));
