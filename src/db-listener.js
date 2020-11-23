@@ -4,6 +4,8 @@ const config = require('config');
 const logger = require('./utils/logger')();
 const {Link} = require('./models/link');
 const browseLink = require('./browsing-bot');
+const dateformat = require('dateformat');
+const { Booking } = require('./models/Booking');
 
 let timerNew;
 let timerRetry;
@@ -32,8 +34,30 @@ dbListenerModule.registerForIncommingLinks = (handleAttachment) =>
         checkForLink('downloadFailed');
     }, config.CheckDBInterval || 8000);
 
+    timerGC = setInterval(() => {
+        deleteOldBookings()
+    }, 1 * 60 * 1000);
+
 }
 
+function deleteOldBookings() {
+    const today = dateformat(new Date() , 'yyyy-mm-dd');
+
+    Booking.updateMany( {$and: [{bookingDate : { $lt : today}} , {status : 'booked'} ]} , {deleted : true} ,  function (err, result) {
+        if (!err)
+        {
+            result = JSON.parse(JSON.stringify(result));
+            if (result && result.nModified > 0)
+            {
+                logger.info(`${result.nModified} old booking(s) deleted from db.`);
+            }
+        }
+        else
+        {
+            logger.error(err);
+        }
+    });
+}
 
 function checkForLink(linkStatus) {
 
