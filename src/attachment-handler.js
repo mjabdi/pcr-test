@@ -13,7 +13,6 @@ const shell = require('shelljs');
 const {Booking} = require('./models/Booking');
 
 
-
 const pdfFolder = config.PDFResultsFolderPath;
 const emailto = config.TestReceiverMail;
 const emailtoOther = config.TestReceiverMailOther;
@@ -37,7 +36,18 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
 
             var booking = null;
 
-            if (linkRecord.extRef && linkRecord.extRef.length > 2)
+            if (linkRecord.filename && linkRecord.filename.length > 0)
+            {
+                booking = await Booking.findOne({filename: linkRecord.filename});
+                if (booking)
+                {
+                    options.forname = booking.forenameCapital;
+                    options.surname = booking.surnameCapital;
+                    options.birthDate = booking.birthDate;
+                }
+            }
+
+            if (!booking && linkRecord.extRef && linkRecord.extRef.length > 2)
             {
                 const bookingMatched = await Booking.findOne({ extRef: linkRecord.extRef , deleted : {$ne : true }}).sort({timeStamp : -1}).exec();
                 if (bookingMatched)
@@ -47,7 +57,7 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
                 }
            }
 
-            if (options.extref && options.extref.length > 2)
+            if (!booking && options.extref && options.extref.length > 2)
             {
                 booking = await Booking.findOne({ extRef: options.extref, birthDate: options.birthDate, deleted : {$ne : true }}).sort({timeStamp : -1}).exec();
                 if (booking)

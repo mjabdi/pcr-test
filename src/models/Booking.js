@@ -138,6 +138,11 @@ const Booking = mongoose.model('Booking', new mongoose.Schema({
         type: String,
         required: true,
         default: 'not-set'
+    },
+
+    referrer: {
+        type: String,
+        required: false,
     }
 
 }));
