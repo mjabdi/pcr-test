@@ -35,6 +35,15 @@ const createPDF = async (options , filename) =>
             }
             const doc = new PDFDocument(pdfOptions);
             const stream = fs.createWriteStream(filename);
+
+            const dd = options.birthDate.substr(8,2);
+            const mm = options.birthDate.substr(5,2);
+            const yyyy = options.birthDate.substr(0,4);
+
+            options.dob = `${dd}/${mm}/${yyyy} ${options.dob.substring(10)}`;
+        
+
+
             doc.pipe(stream);
         
             // doc.image('assets/logo.JPG', 400, 20,  {scale: 0.4});
