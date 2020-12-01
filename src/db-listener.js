@@ -41,9 +41,11 @@ dbListenerModule.registerForIncommingLinks = (handleAttachment) =>
 }
 
 function deleteOldBookings() {
-    const today = dateformat(new Date() , 'yyyy-mm-dd');
 
-    Booking.updateMany( {$and: [{bookingDate : { $lt : today}} , {status : 'booked'} ]} , {deleted : true} ,  function (err, result) {
+    const yesterday = new Date(new Date().getTime() - 86400000); 
+    const yesterdayStr = dateformat(yesterday , 'yyyy-mm-dd');
+
+    Booking.updateMany( {$and: [{bookingDate : { $lt : yesterdayStr}} , {status : 'booked'} ]} , {deleted : true} ,  function (err, result) {
         if (!err)
         {
             result = JSON.parse(JSON.stringify(result));

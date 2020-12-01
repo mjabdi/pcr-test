@@ -1,8 +1,9 @@
 const config = require('config');
 
 const pino = require('pino')({
-  prettyPrint: true,
-  level : config.LogLevel || "info"
+  prettyPrint: { colorize: true, translateTime: true },
+  level : config.LogLevel || "info",
+
 });
 
 module.exports = () =>
