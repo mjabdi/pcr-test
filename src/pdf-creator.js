@@ -1,6 +1,6 @@
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
-var dateFormat = require('dateformat');
+const dateformat = require('dateformat');
 
 const NormalizeDatePassword = (str) =>
 {
@@ -129,7 +129,7 @@ const createPDF = async (options , filename) =>
                 const height = 80;
                 color = 'grey';
                 const now = new Date();
-                const todayString = dateFormat(now, 'dd mmm yyyy').toUpperCase();
+                const todayString = dateformat(now, 'dd mmm yyyy').toUpperCase();
                 
                 doc.moveTo(x, y).lineTo(x + width, y).stroke(color); 
                 doc.moveTo(x , y).lineTo(x, y + height).stroke(color); 

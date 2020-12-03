@@ -11,7 +11,7 @@ const createCertificate = require('./certificate-creator');
 const fs = require('fs');
 const shell = require('shelljs');
 const {Booking} = require('./models/Booking');
-
+const dateformat = require('dateformat');
 
 const pdfFolder = config.PDFResultsFolderPath;
 const emailto = config.TestReceiverMail;
@@ -66,10 +66,13 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
                     options.surname = booking.surnameCapital;
                 }
             }
+
+            const now = new Date();
+            const todayString = dateformat(now, 'yyyy-mm-dd');
            
             if (!booking)
             {
-                booking = await Booking.findOne({ forenameCapital : options.forname, surnameCapital: options.surname, birthDate: options.birthDate, deleted : {$ne : true }}).sort({timeStamp : -1}).exec();
+                booking = await Booking.findOne({ forenameCapital : options.forname, surnameCapital: options.surname, birthDate: options.birthDate, deleted : {$ne : true }, bookingDate : {$lte : todayString}}).sort({timeStamp : -1}).exec();
             }
             
             if (!booking)
@@ -77,7 +80,7 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
                 if (options.forname.indexOf(' ') > 0)
                 {
                     const fornamePart1 =  options.forname.substr(0, options.forname.indexOf(' '));
-                    booking = await Booking.findOne({ forenameCapital : fornamePart1, surnameCapital: options.surname, birthDate: options.birthDate, deleted : {$ne : true }}).sort({timeStamp : -1}).exec();
+                    booking = await Booking.findOne({ forenameCapital : fornamePart1, surnameCapital: options.surname, birthDate: options.birthDate, deleted : {$ne : true }, bookingDate : {$lte : todayString}}).sort({timeStamp : -1}).exec();
                     if (booking)
                     {
                         options.forname = fornamePart1;
