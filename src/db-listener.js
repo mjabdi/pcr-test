@@ -43,7 +43,7 @@ dbListenerModule.registerForIncommingLinks = (handleAttachment) =>
     dbListenerModule.handleAttachment = handleAttachment;
     timerNew = setInterval(() => {
         checkForLink('new');
-    }, 2 * 60 * 1000);
+    }, 1 * 60 * 1000);
 
     timerRetry = setInterval(() => {
         checkForLink('downloadFailed');
