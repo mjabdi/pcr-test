@@ -43,11 +43,11 @@ dbListenerModule.registerForIncommingLinks = (handleAttachment) =>
     dbListenerModule.handleAttachment = handleAttachment;
     timerNew = setInterval(() => {
         checkForLink('new');
-    }, config.CheckDBInterval || 5000);
+    }, 2 * 60 * 1000);
 
     timerRetry = setInterval(() => {
         checkForLink('downloadFailed');
-    }, config.CheckDBInterval || 8000);
+    }, 1 * 60 * 1000);
 
     timerGC = setInterval(() => {
         deleteOldBookings();
