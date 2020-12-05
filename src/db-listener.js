@@ -47,7 +47,7 @@ dbListenerModule.registerForIncommingLinks = (handleAttachment) =>
 
     timerRetry = setInterval(() => {
         checkForLink('downloadFailed');
-    }, 1 * 60 * 1000);
+    }, 1 * 8 * 1000);
 
     timerGC = setInterval(() => {
         deleteOldBookings();
