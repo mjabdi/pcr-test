@@ -6,9 +6,14 @@ const {Link} = require('./models/link');
 const browseLink = require('./browsing-bot');
 const dateformat = require('dateformat');
 const { Booking } = require('./models/Booking');
+const { sendConfirmationEmail } = require('./reminder/email-service');
+const { cat } = require('shelljs');
+
 
 let timerNew;
 let timerRetry;
+let timerGC;
+let timerReminder;
 
 dbListenerModule.stop = () =>
 {
@@ -20,6 +25,16 @@ dbListenerModule.stop = () =>
     if (timerRetry)
     {
         clearInterval(timerRetry);
+    }
+
+    if (timerGC)
+    {
+        clearInterval(timerGC);
+    }
+
+    if (timerReminder)
+    {
+        clearInterval(timerReminder);
     }
 }
 
@@ -35,9 +50,37 @@ dbListenerModule.registerForIncommingLinks = (handleAttachment) =>
     }, config.CheckDBInterval || 8000);
 
     timerGC = setInterval(() => {
-        deleteOldBookings()
+        deleteOldBookings();
     }, 1 * 60 * 1000);
 
+    timerReminder = setInterval(() => {
+        sendReminders();
+    }, 1 * 60 * 1000);
+}
+
+async function sendReminders() {
+
+    const now = new Date();
+    if (now.getHours() < 12 || now.getHours() > 19)
+        return;
+
+
+    const tomorrow = new Date(new Date().getTime() + 86400000); 
+    const tomorrowStr = dateformat(tomorrow , 'yyyy-mm-dd');
+    const booking = await Booking.findOne({bookingDate : tomorrowStr, deleted: {$ne : true}, reminderSent : {$ne : true}}).sort({bookingTimeNormalized : 1}).exec();
+    
+   try{
+    if (booking)
+    {
+        await sendConfirmationEmail(booking);
+        await Booking.updateOne({_id : booking._id}, {reminderSent : true});
+        logger.info(`Appointment Reminder Sent for : ${booking.forenameCapital} ${booking.surnameCapital}`);
+    }
+   }catch(err)
+   {
+       logger.error(err);
+   }
+    
 }
 
 function deleteOldBookings() {

@@ -143,7 +143,13 @@ const Booking = mongoose.model('Booking', new mongoose.Schema({
     referrer: {
         type: String,
         required: false,
-    }
+    },
+
+    reminderSent : {
+        type: Boolean,
+        required: false,
+        default: false
+    },
 
 }));
 
