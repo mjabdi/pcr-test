@@ -4,6 +4,7 @@ const shell = require('shelljs');
 const config = require('config');
 const logger = require('./utils/logger')();
 const path = require('path');
+const {sendEgressAlarm} = require('./utils/alarm');
 
 
 
@@ -53,37 +54,6 @@ module.exports =  async function (linkAdress) {
         const link2 = await page.$eval('div[id="headerButtons"] > a', a => a.href);
         logger.debug(`Actual Link : ` + link2);
 
-       
-        // const viewSource = await page.goto(link2);
-        // const buffer = await viewSource.buffer();
-        // fs.writeFileSync('d:/test.pdf', buffer);
-
-        // const res = await page.evaluate( async () =>
-        //     {
-        //         const link3 = await page.$eval('div[id="headerButtons"] > a', a => a.href);
-        //         return fetch(link3, {
-        //             method: 'GET',
-        //             credentials: 'include'
-        //         }).then(async (res) => {
-        //             return await res.text();
-        //         }
-        //         );
-        //     });
-
-        //     console.log(res);
-          
- 
-        
-         
-        
-
-           // streamPipeline(res, fs.createWriteStream('d:/octocat.pdf'));
-        //    const binary = Buffer.from(res, 'utf8').toString('base64');
-        //     logger.debug(res);
-            //fs.createWriteStream('d:/pppp.pdf').write(data);  
-
-        // const newBlob = new Blob([res.blob], { type: 'application/pdf' });    
-        // logger.debug(res);   
 
  
         await page.click('div[id="headerButtons"] > a');
@@ -118,6 +88,9 @@ module.exports =  async function (linkAdress) {
         logger.error(err);
         if (browser) await browser.close();
         isBrowsing = false;
+
+        sendEgressAlarm();
+
         throw new Error(`download ${linkAdress} failed!`);
     }
 }
