@@ -102,7 +102,7 @@ module.exports = async function(filePath){
                             isNegative = true;
                         }
     
-                        if (element.toLowerCase() === 'rt-pcr)')
+                        if (element.toLowerCase() === 'rt-pcr)' || element.toLowerCase() === '(rt-pcr)')
                         {          
                             isPCR = true;
                         }
