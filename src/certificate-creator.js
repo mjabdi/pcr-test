@@ -65,11 +65,12 @@ const createCertificate = async (options, passportNumber, passportNumber2 , file
             doc.fillColor('black').fontSize(12).font('Times-Roman').text(`To Whom This May Concern,` , startX, startY  ,{characterSpacing : 0.8, wordSpacing : 1 , lineGap : 2 } );
             
             doc.fillColor('black').fontSize(18).font('Times-Bold').text(`${options.forname.toUpperCase()} ${options.surname.toUpperCase()}` 
-                                                                        , startX + 120, startY + 40  ,{characterSpacing : 0.8, wordSpacing : 1 , lineGap : 2 } );
+                                                                        , 0, startY + 40  ,{width:615, align: 'center', characterSpacing : 0.8, wordSpacing : 1 , lineGap : 2 } );
+                                                                        
             doc.fillColor('black').fontSize(18).font('Times-Bold').text(`DOB: ${NormalizeDate(options.birthDate)}` ,
-                                                                         startX + 130, startY + 70  ,{characterSpacing : 0.8, wordSpacing : 1 , lineGap : 2 } );
-            doc.fillColor('black').fontSize(12).font('Times-Bold').text(`Passport Number: ` 
-                                                                        , startX + 125, startY + 110  ,{characterSpacing : 0.5, wordSpacing : 0.8 , lineGap : 2 } );
+                                                                         0 , startY + 70  ,{width:615, align: 'center', characterSpacing : 0.8, wordSpacing : 1 , lineGap : 2 } );
+            // doc.fillColor('black').fontSize(12).font('Times-Bold').text(`Passport Number: ` 
+            //                                                             , startX + 125, startY + 110  ,{characterSpacing : 0.5, wordSpacing : 0.8 , lineGap : 2 } );
             
             var passportStr = `${passportNumber}` ;                                                          
             if (passportNumber2 && passportNumber2.length > 0)
@@ -78,8 +79,8 @@ const createCertificate = async (options, passportNumber, passportNumber2 , file
             }
 
             
-            doc.fillColor('black').fontSize(12).font('Times-Bold').text(`${passportStr}`
-                                                                         , startX + 235, startY + 110  ,{characterSpacing : 0.8, wordSpacing : 1 , lineGap : 2 } );
+            doc.fillColor('black').fontSize(12).font('Times-Bold').text(`Passport Number: ${passportStr}`
+                                                                         , 0 , startY + 110  ,{width:615, align: 'center', characterSpacing : 0.8, wordSpacing : 1 , lineGap : 2 } );
 
                                                     
            
@@ -87,7 +88,7 @@ const createCertificate = async (options, passportNumber, passportNumber2 , file
             const customToday = dateFormat(today, 'dd/mm/yy');
 
             doc.fillColor('black').fontSize(12).font('Times-Bold').text(`Date of Test: ${customToday}` 
-                                                      , startX + 140, startY + 125  ,{characterSpacing : 0.5, wordSpacing : 0.5 , lineGap : 2 } );
+                                                      , 0, startY + 130 ,{width:600, align: 'center', characterSpacing : 0.5, wordSpacing : 0.5 , lineGap : 2 } );
 
 
             doc.fillColor('black').fontSize(12).font('Times-Roman').text(`This is to confirm that the above person shown to be` , 

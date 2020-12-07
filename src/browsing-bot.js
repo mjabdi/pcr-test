@@ -88,7 +88,7 @@ module.exports =  async function (linkAdress) {
         logger.error(err);
         if (browser) await browser.close();
         isBrowsing = false;
-
+    
         sendEgressAlarm();
 
         throw new Error(`download ${linkAdress} failed!`);

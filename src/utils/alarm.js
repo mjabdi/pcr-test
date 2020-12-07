@@ -1,7 +1,8 @@
+const { Link } = require('../models/link');
 const {Notification} = require('../models/Notification');
 const logger = require('./logger')();
 
-const sendEgressAlarm = () =>
+const sendEgressAlarm = async () =>
 {
     const notification = new Notification(
         {
@@ -11,17 +12,21 @@ const sendEgressAlarm = () =>
         }
     );
 
-    notification.save( (err,doc) => {
-        if (err)
-        {
-            logger.error(err);
-        }
-        else if (doc)
-        {
-            logger.warn(`Egress Alarm Sent to the notification system!`);
-        }
-    });
-
+    
+    const errors = await Link.find({ $or:[ {status : 'downloading'}, {status : 'downloadFailed'}]});
+    if (errors && errors.length > 10)
+    {
+        notification.save( (err,doc) => {
+            if (err)
+            {
+                logger.error(err);
+            }
+            else if (doc)
+            {
+                logger.warn(`Egress Alarm Sent to the notification system!`);
+            }
+        });
+    }
 }
 
 module.exports = {
