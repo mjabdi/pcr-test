@@ -19,7 +19,7 @@ module.exports = async function(filePath){
      
                 if (!err && !item)
                 {
-                     //console.log(textArray);
+                    // console.log(textArray);
 
                     textArray.forEach( (element , index) => {
     
@@ -102,7 +102,7 @@ module.exports = async function(filePath){
                             isNegative = true;
                         }
     
-                        if (element.toLowerCase() === '(rt-pcr)')
+                        if (element.toLowerCase() === 'rt-pcr)')
                         {          
                             isPCR = true;
                         }
