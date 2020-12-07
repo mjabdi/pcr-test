@@ -29,6 +29,30 @@ const sendEgressAlarm = async () =>
     }
 }
 
+const sendLabFormatAlarm = async () =>
+{
+    const notification = new Notification(
+        {
+            timeStamp : new Date(),
+            text : 'Lab Report Format Unreadable!',
+            type: 'LabFormat'
+        }
+    );
+
+    notification.save( (err,doc) => {
+        if (err)
+        {
+            logger.error(err);
+        }
+        else if (doc)
+        {
+            logger.warn(`LabFormat Alarm Sent to the notification system!`);
+        }
+    });
+}
+
+
 module.exports = {
-    sendEgressAlarm : sendEgressAlarm
+    sendEgressAlarm : sendEgressAlarm,
+    sendLabFormatAlarm : sendLabFormatAlarm
 }

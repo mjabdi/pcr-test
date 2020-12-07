@@ -12,6 +12,7 @@ const fs = require('fs');
 const shell = require('shelljs');
 const {Booking} = require('./models/Booking');
 const dateformat = require('dateformat');
+const { sendLabFormatAlarm } = require('./utils/alarm');
 
 const pdfFolder = config.PDFResultsFolderPath;
 const emailto = config.TestReceiverMail;
@@ -291,6 +292,7 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
         }
     }).catch( (err) => {
         logger.error(`error parsing "${filename}" : ${err}`);
+        sendLabFormatAlarm();
         Link.updateOne({_id: documentId} , {status: 'file_not_readable', filename: filename}, function (err, doc){
             if (err) {
                 logger.error(err);
