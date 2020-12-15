@@ -7,7 +7,7 @@ dbRecoveryModule.recoverFailedDownloads = async () =>
 {
     try
     {
-       var result = await Link.updateMany({status: 'downloading'}, {"$set": {"status": "downloadFailed"}});
+       var result = await Link.updateMany({$or: [{status: 'downloading'} , {status: 'downloadSuccess'}]} , {"$set": {"status": "downloadFailed"}});
        result = JSON.parse(JSON.stringify(result));
        if (result && result.nModified > 0)
        {

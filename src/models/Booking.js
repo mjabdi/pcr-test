@@ -151,6 +151,11 @@ const Booking = mongoose.model('Booking', new mongoose.Schema({
         default: false
     },
 
+    tr: {
+        type: Boolean,
+        required: false,
+    },
+
 }));
 
 

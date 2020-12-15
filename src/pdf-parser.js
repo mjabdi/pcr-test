@@ -99,7 +99,17 @@ module.exports = async function(filePath){
                         
                         if (element.toLowerCase() === 'negative')
                         {          
-                            isNegative = true;
+                            options.negative = 'Negative';
+                        }
+
+                        if (element.toLowerCase() === 'positive')
+                        {          
+                            options.negative = 'Positive';
+                        }
+
+                        if (element.toLowerCase() === 'inconclusive')
+                        {          
+                            options.negative = 'Inconclusive';
                         }
     
                         if (element.toLowerCase() === 'rt-pcr)' || element.toLowerCase() === '(rt-pcr)')
@@ -136,12 +146,12 @@ module.exports = async function(filePath){
     
                     options.isPCR = isPCR;
     
-                    if (isNegative) {
-                        options.negative = 'Negative';
-                    }else
-                    {
-                        options.negative = 'Positive';
-                    }
+                    // if (isNegative) {
+                    //     options.negative = 'Negative';
+                    // }else
+                    // {
+                    //     options.negative = 'Positive';
+                    // }
     
                     resolve(options);
                 }

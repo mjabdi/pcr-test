@@ -13,6 +13,7 @@ const shell = require('shelljs');
 const {Booking} = require('./models/Booking');
 const dateformat = require('dateformat');
 const { sendLabFormatAlarm } = require('./utils/alarm');
+const createTRCertificate = require('./tr-certificate-creator');
 
 const pdfFolder = config.PDFResultsFolderPath;
 const emailto = config.TestReceiverMail;
@@ -26,6 +27,7 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
 
     parsePDF(pdfFilePath).then( async (options) => 
     {
+
         if (options.isPCR){
 
             const linkRecord = await Link.findOne({_id: documentId});
@@ -102,9 +104,15 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
 
             var sendCert = false;
 
-            if (booking && booking.certificate && options.negative.toLowerCase() === 'negative')
+            if (booking && !booking.tr && booking.certificate && options.negative.toLowerCase() === 'negative')
             {
                 await createCertificate(options, booking.passportNumber, booking.passportNumber2 , certFilePath);
+                sendCert = true;
+            }
+
+            if (booking && booking.tr)
+            {
+                await createTRCertificate(options, booking.passportNumber, certFilePath);
                 sendCert = true;
             }
 
@@ -142,7 +150,7 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
                 {
                     recepients.push(emailto);
                 }
-                if (booking && options.negative.toLowerCase() === 'negative')
+                if (booking && (options.negative.toLowerCase() === 'negative' || booking.tr ))
                 {
                     if (linkRecord.dontSendEmail)
                     {
@@ -152,7 +160,6 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
                     {
                         recepients.push(booking.email);
                     }
-                   
                 }
                 
                 
