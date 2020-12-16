@@ -3,6 +3,7 @@ const {sendMail} = require('./mail-sender-2');
 const {createICS} = require('./ics-creator');
 
 const { calculatePrice } = require('./PriceCalculator');
+const { FormatDateFromString } = require('./DateFormatter');
 
 
 const faq = [
@@ -57,10 +58,10 @@ const sendConfirmationEmail =  async (options) =>
     content += `<p>Your booking number is <strong>"${options.bookingRef}"</strong>, please have this number handy when you attend at the clinic.</p>`;
     content += `<p>Below is your booking information : </p>`;
     content += '<ul>';
-    content += `<li> Appointment Time : ${options.bookingDate} at ${options.bookingTime} </li>`;
+    content += `<li> Appointment Time : ${FormatDateFromString(options.bookingDate)} at ${options.bookingTime} </li>`;
     content += `<li> Forename : ${options.forename.toUpperCase()} </li>`;
     content += `<li> Lastname : ${options.surname.toUpperCase()} </li>`;
-    content += `<li> Date of Birth : ${options.birthDate} </li>`;
+    content += `<li> Date of Birth : ${FormatDateFromString(options.birthDate)} </li>`;
     content += `<li> Title : ${options.title} </li>`;
     content += `<li> Gender : ${options.gender} </li>`;
     content += `<li> Post Code : ${options.postCode} </li>`;
@@ -132,10 +133,10 @@ const sendConfirmationEmailForTR =  async (options) =>
     content += `<p>Your booking number is <strong>"${options.bookingRef}"</strong>, please have this number handy when you attend at the clinic.</p>`;
     content += `<p>Below is your booking information : </p>`;
     content += '<ul>';
-    content += `<li> Appointment Time : ${options.bookingDate} at ${options.bookingTime} </li>`;
+    content += `<li> Appointment Time : ${FormatDateFromString(options.bookingDate)} at ${options.bookingTime} </li>`;
     content += `<li> Forename : ${options.forename.toUpperCase()} </li>`;
     content += `<li> Lastname : ${options.surname.toUpperCase()} </li>`;
-    content += `<li> Date of Birth : ${options.birthDate} </li>`;
+    content += `<li> Date of Birth : ${FormatDateFromString(options.birthDate)} </li>`;
     content += `<li> Title : ${options.title} </li>`;
     content += `<li> Gender : ${options.gender} </li>`;
     content += `<li> Telephone : ${options.phone} </li>`;
