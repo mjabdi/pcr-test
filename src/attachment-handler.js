@@ -104,7 +104,7 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
 
             var sendCert = false;
 
-            if (booking && !booking.tr /*&& booking.certificate && options.negative.toLowerCase() === 'negative'*/)
+            if (booking && !booking.tr && (booking.certificate || options.negative.toLowerCase() === 'positive'))
             {
                 await createCertificate(options, booking.passportNumber, booking.passportNumber2 , certFilePath);
                 sendCert = true;
