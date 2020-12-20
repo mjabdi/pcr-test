@@ -19,7 +19,7 @@ module.exports = async function(filePath){
      
                 if (!err && !item)
                 {
-                     console.log(textArray);
+                    //  console.log(textArray);
 
                     textArray.forEach( (element , index) => {
     
