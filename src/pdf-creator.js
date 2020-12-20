@@ -11,7 +11,7 @@ const NormalizeDatePassword = (str) =>
     return `${day}${month}${year}`;
 }
 
-const createPDF = async (options , filename) =>
+const createPDF = async (options , filename, dontEncrypt) =>
 {
 
     return new Promise( (resolve, reject) => 
@@ -33,7 +33,8 @@ const createPDF = async (options , filename) =>
                 },
                 // pdfVersion : '1.7ext3'
             }
-            const doc = new PDFDocument(pdfOptions);
+            const doc = dontEncrypt ? new PDFDocument() : new PDFDocument(pdfOptions);
+
             const stream = fs.createWriteStream(filename);
 
             const dd = options.birthDate.substr(8,2);

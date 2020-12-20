@@ -72,9 +72,12 @@ async function sendReminders() {
    try{
     if (booking)
     {
-        await sendConfirmationEmail(booking);
-        await Booking.updateOne({_id : booking._id}, {reminderSent : true});
-        logger.info(`Appointment Reminder Sent for : ${booking.forenameCapital} ${booking.surnameCapital}`);
+        if (booking.bookingDate > '2020-12-27')
+        {
+            await sendConfirmationEmail(booking);
+            await Booking.updateOne({_id : booking._id}, {reminderSent : true});
+            logger.info(`Appointment Reminder Sent for : ${booking.forenameCapital} ${booking.surnameCapital}`);
+        }
     }
    }catch(err)
    {
