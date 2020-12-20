@@ -182,15 +182,18 @@ const createCertificatePositive = async (options, passportNumber, passportNumber
             doc.fillColor('black').fontSize(16).font('Times-Bold').text(`DOB: ${NormalizeDate(options.birthDate)}` ,
                                                                          0 , startY + 60  ,{width:615, align: 'center', characterSpacing : 0.8, wordSpacing : 1 , lineGap : 2 } );
 
-            var passportStr = `${passportNumber}` ;                                                          
+            var passportStr = passportNumber ? `${passportNumber}` : '' ;                                                          
             if (passportNumber2 && passportNumber2.length > 0)
             {
                 passportStr = `${passportNumber}  /  ${passportNumber2}`
             }                                                        
 
-            
-            doc.fillColor('black').fontSize(12).font('Times-Bold').text(`Passport Number: ${passportStr}`
-                                                                         , 0 , startY + 90  ,{width:615, align: 'center', characterSpacing : 0.8, wordSpacing : 1 , lineGap : 2 } );
+            if (passportStr && passportStr.length > 0)
+            {
+                doc.fillColor('black').fontSize(12).font('Times-Bold').text(`Passport Number: ${passportStr}`
+                , 0 , startY + 90  ,{width:615, align: 'center', characterSpacing : 0.8, wordSpacing : 1 , lineGap : 2 } );
+            }
+           
 
                                                     
            
