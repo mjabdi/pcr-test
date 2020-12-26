@@ -9,6 +9,7 @@ const sendMail = async (receiver, bcc, subject, content, attachments) =>
         to:   receiver,
         bcc:  bcc,
         subject: subject,
+        pool : true
     });
 
     try{

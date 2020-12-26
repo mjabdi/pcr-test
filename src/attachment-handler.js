@@ -178,7 +178,7 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
                                 if (booking)
                                 {
                                     var sentStatus = 'report_sent';
-                                    if (booking.certificate)
+                                    if (booking.certificate || booking.tr)
                                     {
                                         sentStatus = 'report_cert_sent';
                                     }
