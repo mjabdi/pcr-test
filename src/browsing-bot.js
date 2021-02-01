@@ -33,16 +33,18 @@ module.exports =  async function (linkAdress) {
         await page.goto(linkAdress);
     
         await page.waitForSelector('input[name=tbEmail]');
- //       await page.focus('input[name=tbEmail]')
-//        await page.keyboard.type(egressAccount);
+        await page.focus('input[name=tbEmail]')
+        await page.waitForTimeout(2000);
+        await page.keyboard.type(egressAccount);
 
-        await page.waitForTimeout(1000);
+        await page.waitForTimeout(2000);
 
         await page.waitForSelector('input[name=tbPassword]');
-//        await page.focus('input[name=tbPassword]')
-//        await page.keyboard.type(egressPassword);
+        await page.focus('input[name=tbPassword]')
+        await page.waitForTimeout(2000);;
+        await page.keyboard.type(egressPassword);
 
-        await page.waitForTimeout(1000);;
+        await page.waitForTimeout(2000);;
     
         await page.click('[id="btnLogin"]');
         await page.waitForNavigation();
