@@ -32,28 +32,28 @@ module.exports =  async function (linkAdress) {
 
         await page.goto(linkAdress);
     
-        await page.waitFor('input[name=tbEmail]');
+        await page.waitForSelector('input[name=tbEmail]');
         await page.focus('input[name=tbEmail]')
         await page.keyboard.type(egressAccount);
 
-        await sleep(1000);
+        await page.waitForTimeout(1000);
 
-        await page.waitFor('input[name=tbPassword]');
+        await page.waitForSelector('input[name=tbPassword]');
         await page.focus('input[name=tbPassword]')
         await page.keyboard.type(egressPassword);
 
-        await sleep(2000);
+        await page.waitForTimeout(1000);;
     
         await page.click('[id="btnLogin"]');
         await page.waitForNavigation();
         
-        await page.waitFor('[id="att-101"]');
+        await page.waitForSelector('[id="att-101"]');
     
         const link = await page.$eval('span[id="att-101"] > a', a => a.href);
     
         await page.goto(link);
     
-        await page.waitFor('div[id="headerButtons"]');
+        await page.waitForSelector('div[id="headerButtons"]');
 
         const link2 = await page.$eval('div[id="headerButtons"] > a', a => a.href);
         logger.debug(`Actual Link : ` + link2);
