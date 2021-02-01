@@ -36,6 +36,8 @@ module.exports =  async function (linkAdress) {
         await page.focus('input[name=tbEmail]')
         await page.keyboard.type(egressAccount);
 
+        await sleep(1000);
+
         await page.waitFor('input[name=tbPassword]');
         await page.focus('input[name=tbPassword]')
         await page.keyboard.type(egressPassword);
