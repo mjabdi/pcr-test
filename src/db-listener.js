@@ -16,6 +16,7 @@ let timerGC;
 let timerReminder;
 
 let timerUpdateStats;
+let timerUpdateStatsLast7;
 
 dbListenerModule.stop = () => {
   if (timerNew) {
@@ -36,6 +37,10 @@ dbListenerModule.stop = () => {
 
   if (timerUpdateStats) {
     clearInterval(timerUpdateStats);
+  }
+
+  if (timerUpdateStatsLast7) {
+    clearInterval(timerUpdateStatsLast7);
   }
 };
 
@@ -59,6 +64,10 @@ dbListenerModule.registerForIncommingLinks = (handleAttachment) => {
 
   timerUpdateStats = setInterval(() => {
     updateStats();
+  }, 100 * 60 * 1000);
+
+  timerUpdateStatsLast7 = setInterval(() => {
+    updateStatsLast7();
   }, 10 * 60 * 1000);
 };
 
@@ -145,6 +154,101 @@ async function updateStats() {
     logger.error(err);
   }
 }
+
+async function updateStatsLast7() {
+  try {
+
+    const today = new Date()
+    const prev7days = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000)
+    prev7days.setHours(0)
+
+    const bookings = await Link.aggregate([
+      
+      {"$lookup": {
+          "from": "bookings",
+          "localField": "filename",
+          "foreignField": "filename",
+          "as": "R"
+        }},
+        {"$unwind": "$R"},
+        {"$match": {
+          "$and": [
+            {"isPCR": true},
+            {"timeStamp": {$gt : prev7days}},
+        ]}},
+  ]);
+
+
+    var lessThan12 = 0;
+    var lessThan24 = 0;
+    var lessThan36 = 0;
+    var lessThan48 = 0;
+    var totoalTime = 0;
+
+    var totalCount = 0;
+
+    for (var i = 0; i < bookings.length; i++) {
+      let booking = bookings[i];
+
+      if (!booking.R.samplingTimeStamp) {
+        booking.R.samplingTimeStamp = createTimeStampFromBookingDate(
+          booking.R.bookingDate,
+          booking.R.bookingTime
+        );
+      }
+
+        const delay = parseInt(
+          (booking.timeStamp - booking.R.samplingTimeStamp) / (3600 * 1000)
+        );
+
+        if (delay <= 12) lessThan12++;
+        else if (delay <= 24) lessThan24++;
+        else if (delay <= 36) lessThan36++;
+        else if (delay <= 48) lessThan48++;
+
+        if (delay <= 48) {
+          totoalTime += delay;
+          totalCount++;
+        }
+    }
+
+    const lessThan12Percent = ((lessThan12 / totalCount) * 100).toFixed(1);
+    const lessThan24Percent = ((lessThan24 / totalCount) * 100).toFixed(1);
+    const lessThan36Percent = ((lessThan36 / totalCount) * 100).toFixed(1);
+    const lessThan48Percent = ((lessThan48 / totalCount) * 100).toFixed(1);
+
+    let result = {
+      lessThan12,
+      lessThan24,
+      lessThan36,
+      lessThan48,
+      lessThan12Percent,
+      lessThan24Percent,
+      lessThan36Percent,
+      lessThan48Percent,
+      avg: (totoalTime / totalCount).toFixed(1),
+    };
+    result = JSON.stringify(result);
+
+    const found = await GlobalParams.findOne({ name: "testTimeReportLast7" });
+
+    if (found) {
+      found.value = result;
+      await found.save();
+    } else {
+      const newRecord = new GlobalParams({
+        name: "testTimeReportLast7",
+        lastExtRef: 1,
+        value: result,
+      });
+      newRecord.save();
+    }
+  } catch (err) {
+    logger.error(err);
+  }
+}
+
+
 function createTimeStampFromBookingDate(date, time) {
   var hour = parseInt(time.substr(0, 2));
   const minutes = parseInt(time.substr(3, 2));
