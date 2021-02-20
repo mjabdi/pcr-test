@@ -68,7 +68,7 @@ dbListenerModule.registerForIncommingLinks = (handleAttachment) => {
 
   timerUpdateStatsLast7 = setInterval(() => {
     updateStatsLast7();
-  }, 10 * 60 * 1000);
+  }, 2 * 60 * 1000);
 };
 
 async function updateStats() {

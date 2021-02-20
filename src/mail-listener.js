@@ -70,7 +70,8 @@ mailListenerModule.registerForIncommingMails = (newLinkReceived) =>
     lastSeqNo = seqno;
     
 
-    const linkIndex = mail.html.indexOf(config.EgressLinkKeyword);
+
+    const linkIndex = mail.html ? mail.html.indexOf(config.EgressLinkKeyword) : -1
 
     if (linkIndex > 0)
     {
