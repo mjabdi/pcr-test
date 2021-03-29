@@ -68,7 +68,7 @@ mailListenerModule.registerForIncommingMails = (newLinkReceived) => {
       const fileName = path.join(config.DownloadFolderPath, attachment.fileName);
       var file = fs.createWriteStream(fileName);
   
-      file.on('close', () => {
+      file.on('close', async () => {
         try{
           const bloodreport = new BloodReport(
               {
