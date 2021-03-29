@@ -89,6 +89,10 @@ dbListenerModule.registerForIncommingLinks = (handleAttachment) => {
 async function parseBloodReports(){
   try{
     const bloodreport = await BloodReport.findOne({status:"not-parsed"}).sort({timeStamp:1}).exec();
+
+    if (!bloodreport)
+      return
+
     const options = await parseBloodReport(path.join(config.DownloadFolderPath, bloodreport.filename))
 
     bloodreport.name = options.name
