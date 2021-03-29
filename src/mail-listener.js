@@ -65,6 +65,11 @@ mailListenerModule.registerForIncommingMails = (newLinkReceived) => {
     // console.log(attachment.fileName);
     try{
 
+      if (!attachment.fileName || attachment.fileName.indexOf(".pdf") < 0)
+      {
+        return
+      }
+
       const fileName = path.join(config.DownloadFolderPath, attachment.fileName);
       var file = fs.createWriteStream(fileName);
   
