@@ -14,6 +14,7 @@ const {Booking} = require('./models/Booking');
 const dateformat = require('dateformat');
 const { sendLabFormatAlarm } = require('./utils/alarm');
 const createTRCertificate = require('./tr-certificate-creator');
+const { BloodReport } = require('./models/BloodReport');
 
 const pdfFolder = config.PDFResultsFolderPath;
 const emailto = config.TestReceiverMail;
@@ -283,6 +284,28 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
                     filename: filename
                 }
             ];
+
+            try{
+                const bloodreport = new BloodReport(
+                    {
+                        timeStamp: new Date(),
+                        filename: filename,
+                        forename: options.forname,
+                        surname: options.surname,
+                        birthDate: options.birthDate,
+                        testDate: options.testDate,
+                        extRef: options.extref || null,
+                        source: "egress" 
+                    }
+                )
+
+                await bloodreport.save()
+
+            }catch(err)
+            {
+                logger.error(err)
+            }
+
             GenerateResultMail(options, emailtoOther,null ,options.forname,`Blood Test Result for ${options.forname} ${options.surname} - ${options.collectedon.substring(0,10)}` , attachments).then( ()=>
             {
                 logger.debug(`Blood Test Result Mail Sent : ${filename}`);
