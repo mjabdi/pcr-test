@@ -28,12 +28,7 @@ const BloodReport = mongoose.model('bloodreport', new mongoose.Schema({
         required: false,
     },
 
-    surname: {
-        type: String,
-        required: false,
-    },
-
-    forename: {
+    name: {
         type: String,
         required: false,
     },

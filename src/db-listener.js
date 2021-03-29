@@ -9,6 +9,9 @@ const { Booking } = require("./models/Booking");
 const { sendConfirmationEmail } = require("./reminder/email-service");
 const { cat } = require("shelljs");
 const { GlobalParams } = require("./models/GlobalParams");
+const { BloodReport } = require("./models/BloodReport");
+const parseBloodReport = require("./pdf-parser-email")
+const path = require("path")
 
 let timerNew;
 let timerRetry;
@@ -17,6 +20,8 @@ let timerReminder;
 
 let timerUpdateStats;
 let timerUpdateStatsLast7;
+
+let timerParseBloodReports;
 
 dbListenerModule.stop = () => {
   if (timerNew) {
@@ -42,6 +47,12 @@ dbListenerModule.stop = () => {
   if (timerUpdateStatsLast7) {
     clearInterval(timerUpdateStatsLast7);
   }
+
+  if (timerParseBloodReports)
+  {
+    clearInterval(timerParseBloodReports)
+  }
+
 };
 
 dbListenerModule.registerForIncommingLinks = (handleAttachment) => {
@@ -69,7 +80,29 @@ dbListenerModule.registerForIncommingLinks = (handleAttachment) => {
   timerUpdateStatsLast7 = setInterval(() => {
     updateStatsLast7();
   }, 60 * 60 * 1000);
+
+  timerParseBloodReports = setInterval(() => {
+    parseBloodReports()
+  }, 2000);
 };
+
+async function parseBloodReports(){
+  try{
+    const bloodreport = await BloodReport.findOne({status:"not-parsed"}).sort({timeStamp:1}).exec();
+    const options = await parseBloodReport(path.join(config.DownloadFolderPath, bloodreport.filename))
+
+    bloodreport.name = options.name
+    bloodreport.birthDate = options.birthDate
+    bloodreport.testDate = options.testDate
+    bloodreport.status = "new"
+
+    await bloodreport.save()
+
+  }catch(err)
+  {
+    logger.error(err)
+  }
+}
 
 async function updateStats() {
   try {

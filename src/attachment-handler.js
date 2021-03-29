@@ -290,8 +290,7 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
                     {
                         timeStamp: new Date(),
                         filename: filename,
-                        forename: options.forname,
-                        surname: options.surname,
+                        name: `${options.forname} ${options.surname}`,
                         birthDate: options.birthDate,
                         testDate: options.testDate,
                         extRef: options.extref || null,
