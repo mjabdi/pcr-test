@@ -38,6 +38,11 @@ const BloodReport = mongoose.model('bloodreport', new mongoose.Schema({
         required: false
     },
 
+    email:{
+        type: String,
+        required: false
+    },
+
     testDate:{
         type: String,
         required: false

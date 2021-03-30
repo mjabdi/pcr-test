@@ -11,7 +11,8 @@ const { cat } = require("shelljs");
 const { GlobalParams } = require("./models/GlobalParams");
 const { BloodReport } = require("./models/BloodReport");
 const parseBloodReport = require("./pdf-parser-email")
-const path = require("path")
+const path = require("path");
+const { BloodBooking } = require("./models/BloodBooking");
 
 let timerNew;
 let timerRetry;
@@ -22,6 +23,8 @@ let timerUpdateStats;
 let timerUpdateStatsLast7;
 
 let timerParseBloodReports;
+
+let timerMatchBloodReports;
 
 dbListenerModule.stop = () => {
   if (timerNew) {
@@ -48,9 +51,12 @@ dbListenerModule.stop = () => {
     clearInterval(timerUpdateStatsLast7);
   }
 
-  if (timerParseBloodReports)
-  {
+  if (timerParseBloodReports) {
     clearInterval(timerParseBloodReports)
+  }
+
+  if (timerMatchBloodReports) {
+    clearInterval(timerMatchBloodReports)
   }
 
 };
@@ -84,11 +90,124 @@ dbListenerModule.registerForIncommingLinks = (handleAttachment) => {
   timerParseBloodReports = setInterval(() => {
     parseBloodReports()
   }, 2000);
+
+  timerParseBloodReports = setInterval(() => {
+    matchBloodReports()
+  }, 3000);
+
 };
 
-async function parseBloodReports(){
-  try{
-    const bloodreport = await BloodReport.findOne({status:"not-parsed"}).sort({timeStamp:1}).exec();
+async function matchBloodReports() {
+  try {
+
+    const bloodreport = await BloodReport.findOne({ status: "new" }).sort({ timeStamp: 1 }).exec();
+
+    if (!bloodreport)
+      return
+
+    const bookings = await BloodBooking.aggregate([
+      {
+        $match: {
+          $and: [
+            { bookingDate: bloodreport.testDate },
+            { deleted: { $ne: true } },
+          ],
+        },
+      },
+      {
+        $addFields: { clinic: "blood" },
+      },
+      {
+        $unionWith: {
+          coll: "gynaebookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [
+                  { bookingDate: bloodreport.testDate },
+                  { deleted: { $ne: true } },
+                ],
+              },
+            },
+
+            {
+              $addFields: { clinic: "gynae" },
+            },
+          ],
+        },
+      },
+      {
+        $unionWith: {
+          coll: "gpbookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [
+                  { bookingDate: bloodreport.testDate },
+                  { deleted: { $ne: true } },
+                ],
+              },
+            },
+
+            {
+              $addFields: { clinic: "gp" },
+            },
+          ],
+        },
+      },
+      {
+        $unionWith: {
+          coll: "stdbookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [
+                  { bookingDate: bloodreport.testDate },
+                  { deleted: { $ne: true } },
+                ],
+              },
+            },
+
+            {
+              $addFields: { clinic: "std" },
+            },
+          ],
+        },
+      },
+      {
+        $sort: { timeStamp: 1 },
+      },
+    ]).exec();
+
+    if (!bookings || bookings.length === 0)
+      return
+
+    const booking = bookings.find(e => e.fullname.toUpperCase() === bloodreport.name.toUpperCase())
+
+    if (!booking) {
+      bloodreport.status = "unmatched"
+    }
+    else {
+      bloodreport.status = "matched"
+      bloodreport.bookingId = booking._id
+      bloodreport.clinic = booking.clinic
+      if (booking.email && booking.email.length > 3) {
+        bloodreport.email = booking.email
+      }
+    }
+
+    await bloodreport.save()
+
+  }
+  catch (err) {
+    logger.error(err)
+  }
+
+}
+
+async function parseBloodReports() {
+  try {
+    const bloodreport = await BloodReport.findOne({ status: "not-parsed" }).sort({ timeStamp: 1 }).exec();
 
     if (!bloodreport)
       return
@@ -102,8 +221,7 @@ async function parseBloodReports(){
 
     await bloodreport.save()
 
-  }catch(err)
-  {
+  } catch (err) {
     logger.error(err)
   }
 }
@@ -200,20 +318,25 @@ async function updateStatsLast7() {
     prev7days.setHours(0)
 
     const bookings = await Link.aggregate([
-      
-      {"$lookup": {
+
+      {
+        "$lookup": {
           "from": "bookings",
           "localField": "filename",
           "foreignField": "filename",
           "as": "R"
-        }},
-        {"$unwind": "$R"},
-        {"$match": {
+        }
+      },
+      { "$unwind": "$R" },
+      {
+        "$match": {
           "$and": [
-            {"isPCR": true},
-            {"timeStamp": {$gt : prev7days}},
-        ]}},
-  ]);
+            { "isPCR": true },
+            { "timeStamp": { $gt: prev7days } },
+          ]
+        }
+      },
+    ]);
 
 
     var lessThan12 = 0;
@@ -234,19 +357,19 @@ async function updateStatsLast7() {
         );
       }
 
-        const delay = parseInt(
-          (booking.timeStamp - booking.R.samplingTimeStamp) / (3600 * 1000)
-        );
+      const delay = parseInt(
+        (booking.timeStamp - booking.R.samplingTimeStamp) / (3600 * 1000)
+      );
 
-        if (delay <= 12) lessThan12++;
-        else if (delay <= 24) lessThan24++;
-        else if (delay <= 36) lessThan36++;
-        else if (delay <= 48) lessThan48++;
+      if (delay <= 12) lessThan12++;
+      else if (delay <= 24) lessThan24++;
+      else if (delay <= 36) lessThan36++;
+      else if (delay <= 48) lessThan48++;
 
-        if (delay <= 48) {
-          totoalTime += delay;
-          totalCount++;
-        }
+      if (delay <= 48) {
+        totoalTime += delay;
+        totalCount++;
+      }
     }
 
     const lessThan12Percent = ((lessThan12 / totalCount) * 100).toFixed(1);
