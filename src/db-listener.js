@@ -13,6 +13,10 @@ const { BloodReport } = require("./models/BloodReport");
 const parseBloodReport = require("./pdf-parser-email")
 const path = require("path");
 const { BloodBooking } = require("./models/BloodBooking");
+const { GPBooking } = require("./models/GPBooking");
+const { GynaeBooking } = require("./models/GynaeBooking");
+const { STDBooking } = require("./models/STDBooking");
+
 
 let timerNew;
 let timerRetry;
@@ -476,6 +480,73 @@ function deleteOldBookings() {
       }
     }
   );
+
+  BloodBooking.updateMany(
+    { $and: [{ bookingDate: { $lt: yesterdayStr } }, { status: "booked" }] },
+    { deleted: true },
+    function (err, result) {
+      if (!err) {
+        result = JSON.parse(JSON.stringify(result));
+        if (result && result.nModified > 0) {
+          logger.info(`${result.nModified} old Blood-booking(s) deleted from db.`);
+        }
+      } else {
+        logger.error(err);
+      }
+    }
+  );
+
+  GPBooking.updateMany(
+    { $and: [{ bookingDate: { $lt: yesterdayStr } }, { status: "booked" }] },
+    { deleted: true },
+    function (err, result) {
+      if (!err) {
+        result = JSON.parse(JSON.stringify(result));
+        if (result && result.nModified > 0) {
+          logger.info(`${result.nModified} old GP-booking(s) deleted from db.`);
+        }
+      } else {
+        logger.error(err);
+      }
+    }
+  );
+
+  GynaeBooking.updateMany(
+    { $and: [{ bookingDate: { $lt: yesterdayStr } }, { status: "booked" }] },
+    { deleted: true },
+    function (err, result) {
+      if (!err) {
+        result = JSON.parse(JSON.stringify(result));
+        if (result && result.nModified > 0) {
+          logger.info(`${result.nModified} old Gynae-booking(s) deleted from db.`);
+        }
+      } else {
+        logger.error(err);
+      }
+    }
+  );
+
+  STDBooking.updateMany(
+    { $and: [{ bookingDate: { $lt: yesterdayStr } }, { status: "booked" }] },
+    { deleted: true },
+    function (err, result) {
+      if (!err) {
+        result = JSON.parse(JSON.stringify(result));
+        if (result && result.nModified > 0) {
+          logger.info(`${result.nModified} old STD-booking(s) deleted from db.`);
+        }
+      } else {
+        logger.error(err);
+      }
+    }
+  );
+
+
+
+
+
+
+
 }
 
 function checkForLink(linkStatus) {
