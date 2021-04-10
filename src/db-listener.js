@@ -511,20 +511,20 @@ function deleteOldBookings() {
     }
   );
 
-  GynaeBooking.updateMany(
-    { $and: [{ bookingDate: { $lt: yesterdayStr } }, { status: "booked" }] },
-    { deleted: true },
-    function (err, result) {
-      if (!err) {
-        result = JSON.parse(JSON.stringify(result));
-        if (result && result.nModified > 0) {
-          logger.info(`${result.nModified} old Gynae-booking(s) deleted from db.`);
-        }
-      } else {
-        logger.error(err);
-      }
-    }
-  );
+  // GynaeBooking.updateMany(
+  //   { $and: [{ bookingDate: { $lt: yesterdayStr } }, { status: "booked" }] },
+  //   { deleted: true },
+  //   function (err, result) {
+  //     if (!err) {
+  //       result = JSON.parse(JSON.stringify(result));
+  //       if (result && result.nModified > 0) {
+  //         logger.info(`${result.nModified} old Gynae-booking(s) deleted from db.`);
+  //       }
+  //     } else {
+  //       logger.error(err);
+  //     }
+  //   }
+  // );
 
   STDBooking.updateMany(
     { $and: [{ bookingDate: { $lt: yesterdayStr } }, { status: "booked" }] },
