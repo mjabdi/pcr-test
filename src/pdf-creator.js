@@ -107,9 +107,9 @@ const createPDF = async (options , filename, dontEncrypt) =>
                 doc.fillColor('red').fontSize(12).font('Courier-Bold').text(`${options.negative}`, 270, 405, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
             }
         
-            doc.fillColor('black').fontSize(10).font('Courier').text(`This is a CE marked assay and has been verified for use.`, 50, 420, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
-            doc.fillColor('black').fontSize(10).font('Courier').text(`The laboratory has applied to UKAS for it to be`, 50, 435, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
-            doc.fillColor('black').fontSize(10).font('Courier').text(`added to its accredited test repertoire.`, 50, 450, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
+           // doc.fillColor('black').fontSize(10).font('Courier').text(`Tested with the Anatolia Geneworks Bosphore SARS-CoV-2 PCR Kit`, 50, 420, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
+            doc.fillColor('black').fontSize(10).font('Courier').text(`Tested with the Anatolia Geneworks Bosphore SARS-CoV-2 PCR Kit.`, 50, 435, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
+            doc.fillColor('black').fontSize(10).font('Courier').text(`This Assay is CE marked and has been verified for use.`, 50, 450, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
             
             doc.fillColor('black').fontSize(9).font('Courier').text(`Reported on ${options.reportedon}    Run number ${options.runno}   MECON ${options.mecon}`, 50, 610, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
             doc.fillColor('black').fontSize(9).font('Courier').text(`Authorised on behalf of Consultant Pathologist`, 50, 625, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
