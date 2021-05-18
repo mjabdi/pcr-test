@@ -184,7 +184,12 @@ async function matchBloodReports() {
     ]).exec();
 
     if (!bookings || bookings.length === 0)
+    {
+      bloodreport.status = "unmatched"
+      await bloodreport.save()
       return
+    }
+      
 
     const booking = bookings.find(e => e.fullname.toUpperCase() === bloodreport.name.toUpperCase())
 
