@@ -16,6 +16,7 @@ const { BloodBooking } = require("./models/BloodBooking");
 const { GPBooking } = require("./models/GPBooking");
 const { GynaeBooking } = require("./models/GynaeBooking");
 const { STDBooking } = require("./models/STDBooking");
+const { callRestAPI_POST, callRestAPI_GET } = require("./rest-api-call");
 
 
 let timerNew;
@@ -29,6 +30,8 @@ let timerUpdateStatsLast7;
 let timerParseBloodReports;
 
 let timerMatchBloodReports;
+
+let timerCallSendReminderSMS_DrSIA;
 
 dbListenerModule.stop = () => {
   if (timerNew) {
@@ -61,6 +64,10 @@ dbListenerModule.stop = () => {
 
   if (timerMatchBloodReports) {
     clearInterval(timerMatchBloodReports)
+  }
+
+  if (timerCallSendReminderSMS_DrSIA){
+    clearInterval(timerCallSendReminderSMS_DrSIA)
   }
 
 };
@@ -99,7 +106,17 @@ dbListenerModule.registerForIncommingLinks = (handleAttachment) => {
     matchBloodReports()
   }, 3000);
 
+  timerCallSendReminderSMS_DrSIA = setInterval(() => {
+    callSendReminderSMS_DrSIA()
+  }, 2 * 60 * 1000);
 };
+
+async function callSendReminderSMS_DrSIA ()
+{
+   callRestAPI_POST('/api/dentist/book/checkandsendpaymentreminders')
+   callRestAPI_POST('/api/dentist/book/checkanddeleteexpiredbookings')
+}
+
 
 async function matchBloodReports() {
   try {
