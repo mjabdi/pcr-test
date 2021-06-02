@@ -16,6 +16,9 @@ const { BloodBooking } = require("./models/BloodBooking");
 const { GPBooking } = require("./models/GPBooking");
 const { GynaeBooking } = require("./models/GynaeBooking");
 const { STDBooking } = require("./models/STDBooking");
+const { ScreeningBooking } = require("./models/ScreeningBooking");
+
+
 const { callRestAPI_POST, callRestAPI_GET } = require("./rest-api-call");
 
 
@@ -195,6 +198,26 @@ async function matchBloodReports() {
           ],
         },
       },
+      {
+        $unionWith: {
+          coll: "screeningbookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [
+                  { bookingDate: bloodreport.testDate },
+                  { deleted: { $ne: true } },
+                ],
+              },
+            },
+
+            {
+              $addFields: { clinic: "screening" },
+            },
+          ],
+        },
+      },
+
       {
         $sort: { timeStamp: 1 },
       },
@@ -532,6 +555,22 @@ function deleteOldBookings() {
       }
     }
   );
+
+  ScreeningBooking.updateMany(
+    { $and: [{ bookingDate: { $lt: yesterdayStr } }, { status: "booked" }] },
+    { deleted: true },
+    function (err, result) {
+      if (!err) {
+        result = JSON.parse(JSON.stringify(result));
+        if (result && result.nModified > 0) {
+          logger.info(`${result.nModified} old Screening-booking(s) deleted from db.`);
+        }
+      } else {
+        logger.error(err);
+      }
+    }
+  );
+
 
   // GynaeBooking.updateMany(
   //   { $and: [{ bookingDate: { $lt: yesterdayStr } }, { status: "booked" }] },
