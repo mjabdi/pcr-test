@@ -110,7 +110,7 @@ dbListenerModule.registerForIncommingLinks = (handleAttachment) => {
 
   timerUpdateStatsLast30 = setInterval(() => {
     updateStatsLast30();
-  }, 60 * 60 * 1000);
+  }, 2 * 60 * 1000);
 
 
   timerParseBloodReports = setInterval(() => {
@@ -475,7 +475,7 @@ async function updateStatsLast30() {
 
     const today = new Date()
     const prev30days = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000)
-    prev7days.setHours(0)
+    prev30days.setHours(0)
 
     const bookings = await Link.aggregate([
 
