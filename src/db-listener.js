@@ -110,7 +110,7 @@ dbListenerModule.registerForIncommingLinks = (handleAttachment) => {
 
   timerUpdateStatsLast30 = setInterval(() => {
     updateStatsLast30();
-  }, 2 * 60 * 1000);
+  }, 60 * 60 * 1000);
 
 
   timerParseBloodReports = setInterval(() => {
