@@ -41,6 +41,44 @@ const faqTR = [
 ]
 
 
+const sendReminderEmail =  async (options) =>
+{
+    var content = '';
+    content += `<div style="padding: '25px 0 10px 0'; width: 90%;  font-size: 16px; line-height: 25px; font-family: sans-serif;text-align: justify;color: #333 !important;">`
+    content += `<img style="margin:10px" src="https://www.medicalexpressclinic.co.uk/public/design/images/medical-express-clinic-logo.png" alt="Medical Express Clinic - private clinic London">`;
+    content += `<p>Dear ${options.fullname.toUpperCase()},</p>`;
+    content += `<p>We hope you’re doing well. We wanted to remind you that your next appointment with Medical Express Clinic is scheduled for <strong>${FormatDateFromString(options.bookingDate)} at ${options.bookingTime}</strong>. We look forward to seeing you then.</p>`;
+
+    content += `<p>Your booking number is <strong>"${options.bookingRef}"</strong>, please have this number handy when you attend at the clinic.</p>`;
+    content += `<p>We truly care about your well-being, so if you have any questions or needs in advance of your appointment, you are welcome to call us anytime at 02074991991.</p>`
+
+    content += `<div style="padding-top:10px">`;
+    content += `<p style="font-weight:600">Kind Regards,</p>`;
+    content += `<p style="font-weight:600">Medical Express Clinic</p>`;
+    content += `</div>`;
+  
+  
+    content += '</div>'
+
+    content += `<div style="width:80%; padding: '25px 0 10px 0'; font-size: 14px; line-height: 25px; font-family: sans-serif;text-align: left;color: #555 !important;">`
+    content += `<p>PLEASE note there might be a slight delay in your appointment time (less than 10 minutes) to help maintain social distancing.</p>`;
+    content += '<p>Our address is: 117A Harley Street, Marylebone, London W1G 6AT, UK. The clinic is located on the corner of Harley and Devonshire Streets, we have a blue door please ensure you attend the correct address for your appointment. Please do let us know if you might be late, The results will be delivered to you by email. Please make sure to add results@medicalexpressclinic.co.uk to your safe sender list to ensure deliverability of your results. </p>'
+    content += '</div>'
+
+
+
+    content += `<div style="width:80%; padding: '25px 0 10px 0'; margin-top:10px; font-size: 14px; font-weight: 600 ;line-height: 25px; font-family: sans-serif;text-align: center ;color: #000;">`;
+    content += '***   If you believe you have received this email in error, please delete it and notify info@medicalexpressclinic.co.uk  ***'
+    content+= `</div>`
+
+    const event = await createICS(options.bookingDate, options.bookingTimeNormalized, `${options.fullname}`, options.email);
+
+    await sendMail(options.email, `${options.fullname.toUpperCase()}, appointment reminder for tomorrow - Medical Express Clinic` , content, event);
+   
+}
+
+
+
 const sendConfirmationEmail =  async (options) =>
 {
     if (options.tr)
@@ -120,6 +158,8 @@ const sendConfirmationEmail =  async (options) =>
     await sendMail(options.email, 'PCR Test for Travel Appointment Confirmation' , content, event);
    
 }
+
+
 
 const sendConfirmationEmailForTR =  async (options) =>
 {
@@ -207,4 +247,5 @@ const sendConfirmationEmailForTR =  async (options) =>
 
 module.exports = {
     sendConfirmationEmail : sendConfirmationEmail,
+    sendReminderEmail: sendReminderEmail
 };

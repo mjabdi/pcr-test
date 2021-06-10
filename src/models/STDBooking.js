@@ -112,7 +112,21 @@ const STDBookingSchema = new mongoose.Schema({
     formData: {
         type: String,
         required: false
-    }
+    },
+
+    reminderSent : {
+        type: Boolean,
+        required: false,
+        default: false
+    },
+
+    dontSendReminder : {
+        type: Boolean,
+        required: false,
+        default: false
+    },
+
+
 
 });
 

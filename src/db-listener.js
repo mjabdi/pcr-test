@@ -6,7 +6,7 @@ const { Link } = require("./models/link");
 const browseLink = require("./browsing-bot");
 const dateformat = require("dateformat");
 const { Booking } = require("./models/Booking");
-const { sendConfirmationEmail } = require("./reminder/email-service");
+const { sendConfirmationEmail, sendReminderEmail } = require("./reminder/email-service");
 const { cat } = require("shelljs");
 const { GlobalParams } = require("./models/GlobalParams");
 const { BloodReport } = require("./models/BloodReport");
@@ -17,6 +17,7 @@ const { GPBooking } = require("./models/GPBooking");
 const { GynaeBooking } = require("./models/GynaeBooking");
 const { STDBooking } = require("./models/STDBooking");
 const { ScreeningBooking } = require("./models/ScreeningBooking");
+const { DermaBooking } = require("./models/DermaBooking");
 
 
 const { callRestAPI_POST, callRestAPI_GET } = require("./rest-api-call");
@@ -592,27 +593,172 @@ function createTimeStampFromBookingDate(date, time) {
 
 async function sendReminders() {
   const now = new Date();
-  if (now.getHours() < 12 || now.getHours() > 19) return;
+
+  if (now.getHours() < 18 || now.getHours() > 19) return;
 
   const tomorrow = new Date(new Date().getTime() + 86400000);
   const tomorrowStr = dateformat(tomorrow, "yyyy-mm-dd");
-  const booking = await Booking.findOne({
-    bookingDate: tomorrowStr,
-    deleted: { $ne: true },
-    reminderSent: { $ne: true },
-  })
-    .sort({ bookingTimeNormalized: 1 })
-    .exec();
+
+  const condition = {bookingDate: tomorrowStr, reminderSent: { $ne: true }, dontSendReminder: {$ne: true}}
+
+  const result = await Booking.aggregate([
+      { $addFields: { fullname: { $concat: [ "$forename", " ", "$surname" ] } } },
+      {
+        $match: {
+          $and: [{ deleted: { $ne: true } }, condition],
+          
+        },
+      },
+      {
+        $addFields: { clinic: "pcr" },
+      },
+      {
+        $unionWith: {
+          coll: "gynaebookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [{ deleted: { $ne: true } }, condition],
+                
+              },
+            },
+
+            {
+              $addFields: { clinic: "gynae" },
+            },
+          ],
+        },
+      },
+      {
+        $unionWith: {
+          coll: "gpbookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [{ deleted: { $ne: true } }, condition],
+                
+              },
+            },
+
+            {
+              $addFields: { clinic: "gp" },
+            },
+          ],
+        },
+      },
+      {
+        $unionWith: {
+          coll: "stdbookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [{ deleted: { $ne: true } }, condition],
+                
+              },
+            },
+
+            {
+              $addFields: { clinic: "std" },
+            },
+          ],
+        },
+      },
+      {
+        $unionWith: {
+          coll: "bloodbookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [{ deleted: { $ne: true } }, condition],
+                
+              },
+            },
+
+            {
+              $addFields: { clinic: "blood" },
+            },
+          ],
+        },
+      },
+      {
+        $unionWith: {
+          coll: "dermabookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [{ deleted: { $ne: true } }, condition],
+                
+              },
+            },
+
+            {
+              $addFields: { clinic: "derma" },
+            },
+          ],
+        },
+      },
+      {
+        $unionWith: {
+          coll: "screeningbookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [{ deleted: { $ne: true } }, condition],
+                
+              },
+            },
+
+            {
+              $addFields: { clinic: "screening" },
+            },
+          ],
+        },
+      },
+      {
+        $sort: { bookingDate: -1, bookingTimeNormalized: -1 },
+      },
+    ])
+      .limit(1)
+      .exec();
 
   try {
-    if (booking) {
-      if (booking.bookingDate > "2020-12-27") {
-        await sendConfirmationEmail(booking);
-        await Booking.updateOne({ _id: booking._id }, { reminderSent: true });
-        logger.info(
-          `Appointment Reminder Sent for : ${booking.forenameCapital} ${booking.surnameCapital}`
-        );
+    if (result && result.length > 0) {
+      const booking = result[0]
+      if (booking.email && booking.email.length > 3)
+      {
+        await sendReminderEmail(booking);
       }
+
+      switch (booking.clinic)
+      {
+        case "pcr": 
+          await Booking.updateOne({ _id: booking._id }, { reminderSent: true });
+          break;
+        case "gp": 
+          await GPBooking.updateOne({ _id: booking._id }, { reminderSent: true });
+          break;
+        case "gynae": 
+          await GynaeBooking.updateOne({ _id: booking._id }, { reminderSent: true });
+          break;
+        case "std": 
+          await STDBooking.updateOne({ _id: booking._id }, { reminderSent: true });
+          break;
+        case "blood": 
+          await BloodBooking.updateOne({ _id: booking._id }, { reminderSent: true });
+          break;
+        case "screening": 
+          await ScreeningBooking.updateOne({ _id: booking._id }, { reminderSent: true });
+          break;
+        case "derma": 
+          await DermaBooking.updateOne({ _id: booking._id }, { reminderSent: true });
+          break;
+  
+        default :
+          logger.error("No clinic was set!");
+      }
+      logger.info(
+        `Appointment Reminder Sent for : ${booking.fullname.toUpperCase()}`
+      );
     }
   } catch (err) {
     logger.error(err);

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const GynaeBookingSchema = new mongoose.Schema({
+const DermaBookingSchema = new mongoose.Schema({
   
     timeStamp: {
         type: Date,
@@ -22,11 +22,6 @@ const GynaeBookingSchema = new mongoose.Schema({
         required: true
     },  
     
-    service: {
-        type: String,
-        required: true
-    },
-
     notes: {
         type: String,
         required: false,
@@ -109,6 +104,11 @@ const GynaeBookingSchema = new mongoose.Schema({
         required: false
     },
 
+    package: {
+        type: String,
+        required: false
+    },
+
     reminderSent : {
         type: Boolean,
         required: false,
@@ -116,9 +116,8 @@ const GynaeBookingSchema = new mongoose.Schema({
     },
 
 
-
 });
 
 module.exports = {
-    GynaeBooking : mongoose.model('GynaeBooking', GynaeBookingSchema)
-}
+        DermaBooking : mongoose.model('DermaBooking', DermaBookingSchema)
+} 
