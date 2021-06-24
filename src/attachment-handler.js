@@ -76,7 +76,7 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
            
             if (!booking)
             {
-                booking = await Booking.findOne({ forenameCapital : options.forname, surnameCapital: options.surname, birthDate: options.birthDate, deleted : {$ne : true }, $or: [{status: 'sample_taken'}, {status: 'booked'}] ,bookingDate : {$lte : todayString}}).sort({timeStamp : -1}).exec();
+                booking = await Booking.findOne({ forenameCapital : options.forname, surnameCapital: options.surname, birthDate: options.birthDate, deleted : {$ne : true }, status: 'sample_taken' ,bookingDate : {$lte : todayString}}).sort({timeStamp : -1}).exec();
             }
             
             if (!booking)
@@ -84,7 +84,7 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
                 if (options.forname.indexOf(' ') > 0)
                 {
                     const fornamePart1 =  options.forname.substr(0, options.forname.indexOf(' '));
-                    booking = await Booking.findOne({ forenameCapital : fornamePart1, surnameCapital: options.surname, birthDate: options.birthDate, deleted : {$ne : true }, $or: [{status: 'sample_taken'}, {status: 'booked'}] ,bookingDate : {$lte : todayString}}).sort({timeStamp : -1}).exec();
+                    booking = await Booking.findOne({ forenameCapital : fornamePart1, surnameCapital: options.surname, birthDate: options.birthDate, deleted : {$ne : true }, status: 'sample_taken' ,bookingDate : {$lte : todayString}}).sort({timeStamp : -1}).exec();
                     if (booking)
                     {
                         options.forname = fornamePart1;
