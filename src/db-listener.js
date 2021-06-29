@@ -39,6 +39,9 @@ let timerMatchBloodReports;
 
 let timerCallSendReminderSMS_DrSIA;
 
+let timerCallGenerateInvoiceReports;
+
+
 dbListenerModule.stop = () => {
   if (timerNew) {
     clearInterval(timerNew);
@@ -81,6 +84,12 @@ dbListenerModule.stop = () => {
     clearInterval(timerCallSendReminderSMS_DrSIA)
   }
 
+  if (timerCallGenerateInvoiceReports){
+    clearInterval(timerCallGenerateInvoiceReports)
+  }
+
+  
+
 };
 
 dbListenerModule.registerForIncommingLinks = (handleAttachment) => {
@@ -99,7 +108,7 @@ dbListenerModule.registerForIncommingLinks = (handleAttachment) => {
 
   timerReminder = setInterval(() => {
     sendReminders();
-  }, 1 * 60 * 1000);
+  }, 1 * 70 * 1000);
 
   timerUpdateStats = setInterval(() => {
     updateStats();
@@ -111,7 +120,7 @@ dbListenerModule.registerForIncommingLinks = (handleAttachment) => {
 
   timerUpdateStatsLast30 = setInterval(() => {
     updateStatsLast30();
-  }, 60 * 60 * 1000);
+  }, 60 * 65 * 1000);
 
 
   timerParseBloodReports = setInterval(() => {
@@ -125,7 +134,18 @@ dbListenerModule.registerForIncommingLinks = (handleAttachment) => {
   timerCallSendReminderSMS_DrSIA = setInterval(() => {
     callSendReminderSMS_DrSIA()
   }, 2 * 60 * 1000);
+
+  timerCallGenerateInvoiceReports = setInterval(() => {
+    callGenerateInvoiceReports ()
+  }, 60 * 70 * 1000);
+  
 };
+
+
+async function callGenerateInvoiceReports ()
+{
+  callRestAPI_POST('/api/medex/invoice/calculateinvoicereports')
+}
 
 async function callSendReminderSMS_DrSIA ()
 {
