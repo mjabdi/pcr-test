@@ -97,6 +97,7 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
             if (!booking)
             {
                 await Link.updateOne({_id: documentId} , {emailNotFound: true});
+                await sendPCRUnmatchedNotification(options)
             }
             else
             {
@@ -408,6 +409,31 @@ async function GenerateResultMail(options, to , bcc, name, subject , attachments
     const result = await sendMail(to, bcc, subject , content , attachments ); 
     
     return result;
+}
+
+async function sendPCRUnmatchedNotification (options){
+    try{
+
+        let subject = `NEW PCR UNMCATCHED RECORD FOUND! - ${options.forname} ${options.surname}`
+        let content = `<div style="font-size:18px;font-weight:600">`
+        
+        content += `<p> NEW PCR UNMATCHED RECORD FOUND: </p>`
+        content += `<p> Forename : ${options.forname} </p>`
+        content += `<p> Surname : ${options.surname} </p>`
+        content += `<p> BirthDate : ${options.birthDate} </p>`
+
+        content += `</div>`
+
+        await sendMail('steve@medicalexpressclinic.co.uk',null, subject , content , null );
+        await sendMail('matt@dubseo.co.uk',null, subject , content , null );
+        await sendMail('m.jafarabdi@gmail.com',null, subject , content , null );
+
+        
+
+    }catch(err)
+    {
+        console.log(err)
+    }
 }
 
 module.exports = attachmentHandlerModule;
