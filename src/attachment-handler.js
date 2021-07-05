@@ -424,7 +424,7 @@ async function sendPCRUnmatchedNotification (options){
 
         content += `</div>`
 
-        await sendMail('steve@medicalexpressclinic.co.uk',null, subject , content , null );
+        await sendMail('info@medicalexpressclinic.co.uk',null, subject , content , null );
         await sendMail('matt@dubseo.co.uk',null, subject , content , null );
         await sendMail('m.jafarabdi@gmail.com',null, subject , content , null );
 
