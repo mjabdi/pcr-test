@@ -72,11 +72,13 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
             }
 
             const now = new Date();
+            const prev5days = new Date(now.getTime() - 5 * 24 * 60 * 60 * 1000)
             const todayString = dateformat(now, 'yyyy-mm-dd');
+            const prev5daysString = dateformat(prev5days, 'yyyy-mm-dd');
            
             if (!booking)
             {
-                booking = await Booking.findOne({ forenameCapital : options.forname, surnameCapital: options.surname, birthDate: options.birthDate, deleted : {$ne : true }, status: 'sample_taken' ,bookingDate : {$lte : todayString}}).sort({timeStamp : 1}).exec();
+                booking = await Booking.findOne({ forenameCapital : options.forname, surnameCapital: options.surname, birthDate: options.birthDate, deleted : {$ne : true }, status: 'sample_taken' ,bookingDate : {$lte : todayString}, bookingDate : {$gte : prev5daysString}}).sort({timeStamp : 1}).exec();
             }
             
             if (!booking)
@@ -84,7 +86,7 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
                 if (options.forname.indexOf(' ') > 0)
                 {
                     const fornamePart1 =  options.forname.substr(0, options.forname.indexOf(' '));
-                    booking = await Booking.findOne({ forenameCapital : fornamePart1, surnameCapital: options.surname, birthDate: options.birthDate, deleted : {$ne : true }, status: 'sample_taken' ,bookingDate : {$lte : todayString}}).sort({timeStamp : 1}).exec();
+                    booking = await Booking.findOne({ forenameCapital : fornamePart1, surnameCapital: options.surname, birthDate: options.birthDate, deleted : {$ne : true }, status: 'sample_taken' ,bookingDate : {$lte : todayString}, bookingDate : {$gte : prev5daysString}}).sort({timeStamp : 1}).exec();
                     if (booking)
                     {
                         options.forname = fornamePart1;
