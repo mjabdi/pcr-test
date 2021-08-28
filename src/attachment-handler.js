@@ -372,6 +372,8 @@ async function GenerateResultMail(options, to , bcc, name, subject , attachments
 
     content += '</div>';
 
+    content += `<p>To verify our UKAS accreditation, please visit <a href="https://verify.ukas.com/85152ce4-c735-4c7a-b2dc-5c4f67018f6a#gs.9u23zn" target="_blank">https://verify.ukas.com/85152ce4-c735-4c7a-b2dc-5c4f67018f6a#gs.9u23zn</a> for our Certificate and <a href="https://www.ukas.com/wp-content/uploads/schedule_uploads/970638/22232-Medical-Single.pdf" target="_blank">https://www.ukas.com/wp-content/uploads/schedule_uploads/970638/22232-Medical-Single.pdf</a> for our Schedule.</p>`
+
     content += `<p>If you’ve had a good experience at the clinic please let others know by leaving a review on our Google or Trustpilot pages. Thank you.</p>`;
 
     content += `<div style="padding: '25px 0 10px 0'; margin-top: 20px; margin-bottom:20px ; font-size: 16px; line-height: 25px; font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif;text-align: left;color: #111 !important;">`;

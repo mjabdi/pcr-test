@@ -118,6 +118,10 @@ const createCertificate = async (options, passportNumber, passportNumber2 , file
            
             doc.image('assets/signature.png',  startX , startY + 340 , {scale: 0.6});
 
+            doc.image('assets/purple-ukas-text.png',  startX + 300 , startY + 290 , {scale: 0.8});
+            doc.image('assets/qr-code-blue.png',  startX + 400 , 680 , {scale: 0.8});
+
+
             doc.fillColor('black').fontSize(12).font('Times-Roman').text(`Yours faithfully,` , 
                                            startX, startY + 290 ,{characterSpacing : 0.7, wordSpacing : 0.8 , lineGap : 4 } );
 
