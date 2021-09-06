@@ -63,7 +63,7 @@ attachmentHandlerModule.handleAttachment = (pdfFilePath, documentId) => {
 
             if (!booking && options.extref && options.extref.length > 2)
             {
-                booking = await Booking.findOne({ extRef: options.extref, birthDate: options.birthDate, deleted : {$ne : true }}).sort({timeStamp : -1}).exec();
+                booking = await Booking.findOne({ extRef: options.extref, birthDate: options.birthDate, deleted : {$ne : true }, status: 'sample_taken'}).sort({timeStamp : -1}).exec();
                 if (booking)
                 {
                     options.forname = booking.forenameCapital;
