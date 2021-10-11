@@ -27,7 +27,7 @@ module.exports = async function(filePath){
                         {
                             options.surname = textArray[index + 1];
                             var i = index + 2;
-                            while (textArray[i].toLowerCase() !== 'medical' && textArray[i].toLowerCase() !== 'forename')
+                            while (textArray[i] && textArray[i].toLowerCase() !== 'medical' && textArray[i].toLowerCase() !== 'forename')
                             {
                                 options.surname += (' ' + textArray[i]);
                                 i++;
