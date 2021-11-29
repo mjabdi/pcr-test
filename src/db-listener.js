@@ -790,7 +790,7 @@ function deleteOldBookings() {
   const yesterdayStr = dateformat(yesterday, "yyyy-mm-dd");
 
   Booking.updateMany(
-    { $and: [{ bookingDate: { $lt: yesterdayStr } }, { status: "booked" }] },
+    { $and: [{ bookingDate: { $lt: yesterdayStr } }, { status: "booked" }, { paid: { $ne : true} } ] },
     { deleted: true },
     function (err, result) {
       if (!err) {
@@ -805,7 +805,7 @@ function deleteOldBookings() {
   );
 
   BloodBooking.updateMany(
-    { $and: [{ bookingDate: { $lt: yesterdayStr } }, { status: "booked" }] },
+    { $and: [{ bookingDate: { $lt: yesterdayStr } }, { status: "booked" }, { paid: { $ne : true} } ] },
     { deleted: true },
     function (err, result) {
       if (!err) {
@@ -820,7 +820,7 @@ function deleteOldBookings() {
   );
 
   GPBooking.updateMany(
-    { $and: [{ bookingDate: { $lt: yesterdayStr } }, { status: "booked" }] },
+    { $and: [{ bookingDate: { $lt: yesterdayStr } }, { status: "booked" }, { paid: { $ne : true} } ] },
     { deleted: true },
     function (err, result) {
       if (!err) {
@@ -835,7 +835,7 @@ function deleteOldBookings() {
   );
 
   ScreeningBooking.updateMany(
-    { $and: [{ bookingDate: { $lt: yesterdayStr } }, { status: "booked" }] },
+    { $and: [{ bookingDate: { $lt: yesterdayStr } }, { status: "booked" }, { paid: { $ne : true} } ] },
     { deleted: true },
     function (err, result) {
       if (!err) {
@@ -866,7 +866,7 @@ function deleteOldBookings() {
   // );
 
   STDBooking.updateMany(
-    { $and: [{ bookingDate: { $lt: yesterdayStr } }, { status: "booked" }] },
+    { $and: [{ bookingDate: { $lt: yesterdayStr } }, { status: "booked" }, { paid: { $ne : true} } ] },
     { deleted: true },
     function (err, result) {
       if (!err) {
