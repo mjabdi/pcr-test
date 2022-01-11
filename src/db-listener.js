@@ -18,6 +18,7 @@ const { GynaeBooking } = require("./models/GynaeBooking");
 const { STDBooking } = require("./models/STDBooking");
 const { ScreeningBooking } = require("./models/ScreeningBooking");
 const { DermaBooking } = require("./models/DermaBooking");
+const { CorporateBooking } = require("./models/CorporateBooking");
 
 
 const { callRestAPI_POST, callRestAPI_GET } = require("./rest-api-call");
@@ -250,6 +251,27 @@ async function matchBloodReports() {
           ],
         },
       },
+
+      {
+        $unionWith: {
+          coll: "corporatebookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [
+                  { bookingDate: bloodreport.testDate },
+                  { deleted: { $ne: true } },
+                ],
+              },
+            },
+
+            {
+              $addFields: { clinic: "corporate" },
+            },
+          ],
+        },
+      },
+
 
       {
         $sort: { timeStamp: 1 },
@@ -734,6 +756,26 @@ async function sendReminders() {
           ],
         },
       },
+
+      {
+        $unionWith: {
+          coll: "corporatebookings",
+          pipeline: [
+            {
+              $match: {
+                $and: [{ deleted: { $ne: true } }, condition],
+                
+              },
+            },
+
+            {
+              $addFields: { clinic: "corporate" },
+            },
+          ],
+        },
+      },
+
+
       {
         $sort: { bookingDate: -1, bookingTimeNormalized: -1 },
       },
@@ -769,6 +811,10 @@ async function sendReminders() {
         case "screening": 
           await ScreeningBooking.updateOne({ _id: booking._id }, { reminderSent: true });
           break;
+        case "corporate": 
+          await CorporateBooking.updateOne({ _id: booking._id }, { reminderSent: true });
+          break;
+  
         case "derma": 
           await DermaBooking.updateOne({ _id: booking._id }, { reminderSent: true });
           break;
@@ -849,6 +895,20 @@ function deleteOldBookings() {
     }
   );
 
+  CorporateBooking.updateMany(
+    { $and: [{ bookingDate: { $lt: yesterdayStr } }, { status: "booked" }, { paid: { $ne : true} } ] },
+    { deleted: true },
+    function (err, result) {
+      if (!err) {
+        result = JSON.parse(JSON.stringify(result));
+        if (result && result.nModified > 0) {
+          logger.info(`${result.nModified} old Corporate-booking(s) deleted from db.`);
+        }
+      } else {
+        logger.error(err);
+      }
+    }
+  );
 
   // GynaeBooking.updateMany(
   //   { $and: [{ bookingDate: { $lt: yesterdayStr } }, { status: "booked" }] },
