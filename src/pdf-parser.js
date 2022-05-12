@@ -1,4 +1,5 @@
 const pdfreader = require("pdfreader");
+const { cat } = require("shelljs");
 
 module.exports = async function(filePath){
     
@@ -37,10 +38,13 @@ module.exports = async function(filePath){
                         {
                             options.forname = textArray[index + 1];
                             var i = index + 2;
-                            while (textArray[i]?.toLowerCase() !== 'medical' && textArray[i]?.toLowerCase() !== 'emailed' && textArray[i]?.toLowerCase() !=='title')
-                            {
-                                options.forname += (' ' + textArray[i]);
-                                i++;
+                            try {
+                                while (textArray[i].toLowerCase() !== 'medical' && textArray[i].toLowerCase() !== 'emailed' && textArray[i].toLowerCase() !== 'title') {
+                                    options.forname += (' ' + textArray[i]);
+                                    i++;
+                                }
+                            } catch (err) {
+                                options.forname = ''
                             }
                         }   
     
