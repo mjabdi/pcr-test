@@ -7,6 +7,7 @@ const browseLink = require("./browsing-bot");
 const dateformat = require("dateformat");
 const { Booking } = require("./models/Booking");
 const { sendConfirmationEmail, sendReminderEmail } = require("./reminder/email-service");
+const {sendReminderTextMessage} = require("./reminder/sms-service")
 const { cat } = require("shelljs");
 const { GlobalParams } = require("./models/GlobalParams");
 const { BloodReport } = require("./models/BloodReport");
@@ -19,6 +20,7 @@ const { STDBooking } = require("./models/STDBooking");
 const { ScreeningBooking } = require("./models/ScreeningBooking");
 const { DermaBooking } = require("./models/DermaBooking");
 const { CorporateBooking } = require("./models/CorporateBooking");
+
 
 
 const { callRestAPI_POST, callRestAPI_GET } = require("./rest-api-call");
@@ -790,6 +792,25 @@ async function sendReminders() {
       {
         await sendReminderEmail(booking);
       }
+
+      if (booking.smsPush && booking.phone && booking.phone.length > 3)
+      {
+          let _phone = booking.phone
+
+          if (_phone.startsWith("07") && _phone.length === 11)
+          {
+              _phone = `+447${_phone.substr(2,10)}`
+          }else if (_phone.startsWith("7") && _phone.length === 10)
+          {
+              _phone = `+447${_phone.substr(1,10)}`
+          }
+
+          if (_phone.length === 13 && _phone.startsWith('+447'))
+          {
+              await sendReminderTextMessage(booking, _phone)
+          }
+      }
+
 
       switch (booking.clinic)
       {

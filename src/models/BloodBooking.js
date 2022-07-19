@@ -130,6 +130,12 @@ const BloodBookingSchema = new mongoose.Schema({
         default: false
     },
 
+    smsPush: {
+        type: Boolean,
+        default: false
+    },
+
+
 
 });
 
