@@ -807,7 +807,15 @@ async function sendReminders() {
 
           if (_phone.length === 13 && _phone.startsWith('+447'))
           {
+            try {
               await sendReminderTextMessage(booking, _phone)
+              logger.info(
+                `Appointment Reminder SMS Sent for : ${booking.fullname.toUpperCase()}`
+              );
+
+            } catch (err) {
+              logger.error(err)
+            }
           }
       }
 
@@ -844,7 +852,7 @@ async function sendReminders() {
           logger.error("No clinic was set!");
       }
       logger.info(
-        `Appointment Reminder Sent for : ${booking.fullname.toUpperCase()}`
+        `Appointment Reminder Email Sent for : ${booking.fullname.toUpperCase()}`
       );
     }
   } catch (err) {
