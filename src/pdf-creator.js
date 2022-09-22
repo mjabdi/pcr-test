@@ -110,7 +110,7 @@ const createPDF = async (options , filename, dontEncrypt) =>
            // doc.fillColor('black').fontSize(10).font('Courier').text(`Tested with the Anatolia Geneworks Bosphore SARS-CoV-2 PCR Kit`, 50, 420, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
             doc.fillColor('black').fontSize(10).font('Courier').text(`Tested with the Anatolia Geneworks Bosphore SARS-CoV-2 PCR Kit.`, 50, 435, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
             doc.fillColor('black').fontSize(10).font('Courier').text(`This is a CE marked assay and has been verified for use.`, 50, 450, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
-            doc.fillColor('black').fontSize(10).font('Courier-Bold').text(`Medical Express Clinic is UKAS (ISO15189) Accredited`, 50, 465, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
+            // doc.fillColor('black').fontSize(10).font('Courier-Bold').text(`Medical Express Clinic is UKAS (ISO15189) Accredited`, 50, 465, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
             
             doc.fillColor('black').fontSize(9).font('Courier').text(`Reported on ${options.reportedon}    Run number ${options.runno}   MECON ${options.mecon}`, 50, 615, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
             doc.fillColor('black').fontSize(9).font('Courier').text(`Authorised on behalf of Consultant Pathologist`, 50, 630, {characterSpacing : 1, wordSpacing : 2 , lineGap : 2 }  );
@@ -150,7 +150,7 @@ const createPDF = async (options , filename, dontEncrypt) =>
                 doc.image('assets/checkbox-tick2.png', x + 48, y + 18 + 12,  {scale: 0.38});
                 doc.image('assets/checkbox2.png', x + 158, y + 18 + 12,  {scale: 0.38});
                 doc.image('assets/signature.png', x + 70, y + 18 + 5 + 20 , {scale: 0.4});
-                doc.image('assets/black-ukas.png', 70, y - 5 , {scale: 0.65});
+                // doc.image('assets/black-ukas.png', 70, y - 5 , {scale: 0.65});
 
                 //doc.fillColor(color).fontSize(11).font('Symbol').text(`☑`, x + 5 + 40, y + 150, {characterSpacing : 0.8, wordSpacing : 1 , lineGap : 1 });
                ///-----------------
