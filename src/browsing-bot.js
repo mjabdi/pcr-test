@@ -39,6 +39,11 @@ module.exports =  async function (linkAdress) {
 
         await page.waitForTimeout(2000);
 
+        await page.click('[id="btnContinue"]');
+        await page.waitForNavigation();
+
+
+
         await page.waitForSelector('input[name=tbPassword]');
         await page.focus('input[name=tbPassword]')
         await page.waitForTimeout(2000);;
