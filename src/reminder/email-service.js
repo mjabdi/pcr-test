@@ -47,10 +47,10 @@ const sendReminderEmail =  async (options) =>
     content += `<div style="padding: '25px 0 10px 0'; width: 90%;  font-size: 16px; line-height: 25px; font-family: sans-serif;text-align: justify;color: #333 !important;">`
     content += `<img style="margin:10px" src="https://www.medicalexpressclinic.co.uk/public/design/images/medical-express-clinic-logo.png" alt="Medical Express Clinic - private clinic London">`;
     content += `<p>Dear ${options.fullname.toUpperCase()},</p>`;
-    content += `<p>We hope you’re doing well. We wanted to remind you that your next appointment with Medical Express Clinic is scheduled for <strong>${FormatDateFromString(options.bookingDate)} at ${options.bookingTime}</strong>. We look forward to seeing you then.</p>`;
+    content += `<p>We wanted to remind you that your appointment with the Medical Express Clinic is scheduled for <strong>${FormatDateFromString(options.bookingDate)} at ${options.bookingTime}</strong>. We look forward to seeing you then.</p>`;
 
     content += `<p>Your booking number is <strong>"${options.bookingRef}"</strong>, please have this number handy when you attend at the clinic.</p>`;
-    content += `<p>We truly care about your well-being, so if you have any questions or needs in advance of your appointment, you are welcome to call us anytime at 02074991991.</p>`
+    content += `<p>If you have any questions or require assistance in advance of your appointment, you are welcome to call us during our working hours at 0207 499 1991, alternatively, you can email info@medicalexpressclinic.co.uk and one of our team will get back to you.</p>`
 
     content += `<div style="padding-top:10px">`;
     content += `<p style="font-weight:600">Kind Regards,</p>`;
