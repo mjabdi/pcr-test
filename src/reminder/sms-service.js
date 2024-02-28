@@ -5,9 +5,9 @@ const { FormatDateFromString } = require('./DateFormatter');
 
 const sendReminderTextMessage = async (options, to) =>
 {
-    let message = `Dear ${options.fullname.toUpperCase()},\r\n\nThank you for booking your appointment for Gynae Clinic at the Medical Express Clinic. We look forward to welcoming you.\r\n\n`
-    message += `We wanted to remind you that your appointment with the Medical Express Clinic is scheduled for <strong>${FormatDateFromString(options.bookingDate)} at ${options.bookingTime}</strong>. We look forward to seeing you then.`
-    message += `\r\n\r\nYour booking number is <strong>"${options.bookingRef}"</strong>, please have this number handy when you attend at the clinic.`
+    let message = `Dear ${options.fullname.toUpperCase()},\r\n\nThank you for booking your appointment at the Medical Express Clinic. We look forward to welcoming you.\r\n\n`
+    message += `We wanted to remind you that your appointment with the Medical Express Clinic is scheduled for ${FormatDateFromString(options.bookingDate)} at ${options.bookingTime}. We look forward to seeing you then.`
+    message += `\r\n\r\nYour booking number is "${options.bookingRef}", please have this number handy when you attend at the clinic.`
 
 
 
