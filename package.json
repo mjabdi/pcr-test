@@ -33,6 +33,7 @@
     "pino-pretty": "^4.3.0",
     "puppeteer": "^5.3.1",
     "shelljs": "^0.8.4",
-    "twilio": "^3.55.1"
+    "twilio": "^3.55.1",
+    "uuid": "^9.0.1"
   }
 }

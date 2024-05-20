@@ -101,7 +101,7 @@ const sendConfirmationEmail =  async (options) =>
     content += `<li> Lastname : ${options.surname.toUpperCase()} </li>`;
     content += `<li> Date of Birth : ${FormatDateFromString(options.birthDate)} </li>`;
     content += `<li> Title : ${options.title} </li>`;
-    content += `<li> Gender : ${options.gender} </li>`;
+    content += `<li> Sex : ${options.gender} </li>`;
     content += `<li> Post Code : ${options.postCode} </li>`;
     content += `<li> Address : ${options.address} </li>`;
     content += `<li> Telephone : ${options.phone} </li>`;
@@ -178,7 +178,7 @@ const sendConfirmationEmailForTR =  async (options) =>
     content += `<li> Lastname : ${options.surname.toUpperCase()} </li>`;
     content += `<li> Date of Birth : ${FormatDateFromString(options.birthDate)} </li>`;
     content += `<li> Title : ${options.title} </li>`;
-    content += `<li> Gender : ${options.gender} </li>`;
+    content += `<li> Sex : ${options.gender} </li>`;
     content += `<li> Telephone : ${options.phone} </li>`;
     content += `<li> Passport Number : ${options.passportNumber} </li>`;
     content += `<li> NHS Number : ${options.NHSNumber || '-'} </li>`;

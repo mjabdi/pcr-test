@@ -6,6 +6,7 @@ const application = require('./utils/application');
 const fs = require('fs')
 const path = require('path');
 const { cat } = require("shelljs");
+const { v4: uuidv4 } = require("uuid");
 const { BloodReport } = require("./models/BloodReport");
 
 var mailListener = null;
@@ -69,20 +70,19 @@ mailListenerModule.registerForIncommingMails = (newLinkReceived) => {
       {
         return
       }
+      const uuid = uuidv4();
 
-      const fileName = path.join(config.DownloadFolderPath, attachment.fileName);
+      const fileName = path.join(config.DownloadFolderPath, uuid + '-' + attachment.fileName);
       var file = fs.createWriteStream(fileName);
   
       file.on('close', async () => {
         try{
-          const bloodreport = new BloodReport(
-              {
-                  timeStamp: new Date(),
-                  filename: attachment.fileName,
-                  status: "not-parsed",
-                  source: "email" 
-              }
-          )
+          const bloodreport = new BloodReport({
+            timeStamp: new Date(),
+            filename: uuid + "-" + attachment.fileName,
+            status: "not-parsed",
+            source: "email",
+          });
           await bloodreport.save()
 
       }catch(err)
