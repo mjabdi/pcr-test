@@ -5,7 +5,7 @@ const config = require('config');
 const logger = require('./utils/logger')();
 const path = require('path');
 const {sendEgressAlarm} = require('./utils/alarm');
-
+const { v4: uuidv4 } = require("uuid");
 
 
 const downloadFolder = config.ChromeDownloadFolderPath;
@@ -68,8 +68,10 @@ module.exports =  async function (linkAdress) {
 
  
         await page.click('div[id="headerButtons"] > a');
-    
-        const fileName = await page.$eval('h4[id="panelHeadingText"] > span', span => span.textContent);;
+        
+        
+        const uuid = uuidv4();
+        const fileName = await page.$eval('h4[id="panelHeadingText"] > span', span => uuid + '-' + span.textContent);;
         
         for (i=0 ; i < 15 ; i++)
         {
