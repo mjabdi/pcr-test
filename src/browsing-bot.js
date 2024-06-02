@@ -71,7 +71,7 @@ module.exports =  async function (linkAdress) {
         
         
         const uuid = uuidv4();
-        const fileName = await page.$eval('h4[id="panelHeadingText"] > span', span => uuid + '-' + span.textContent);;
+        const fileName =  uuid + '-' + await page.$eval('h4[id="panelHeadingText"] > span', span => span.textContent);;
         
         for (i=0 ; i < 15 ; i++)
         {
