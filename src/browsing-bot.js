@@ -71,11 +71,14 @@ module.exports =  async function (linkAdress) {
         
         
         const uuid = uuidv4();
-        const fileName = await page.$eval('h4[id="panelHeadingText"] > span', span => span.textContent);;
-        
+        console.log('uuid: ', uuid + '-' + '.......')
+        const fileName =  uuid + '-' + await page.$eval('h4[id="panelHeadingText"] > span', span => span.textContent);;
+        console.log("uuid - fileName: ", fileName);
         for (i=0 ; i < 15 ; i++)
         {
             await page.waitForTimeout(1000);
+            console.log('loop: ', path.join(downloadFolder, fileName));
+            console.log("loop: ", path.join(destinationFolder, fileName));
             if (await fileExists(path.join(downloadFolder , fileName)))
             {
                 await page.waitForTimeout(1000);
@@ -89,6 +92,7 @@ module.exports =  async function (linkAdress) {
 
         if (await fileExists(path.join(destinationFolder , fileName)))
         {
+            console.log("return: ", path.join(destinationFolder, fileName));
             return path.join(destinationFolder, fileName);
         }
         else
