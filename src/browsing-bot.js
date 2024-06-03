@@ -65,24 +65,18 @@ module.exports =  async function (linkAdress) {
         const link2 = await page.$eval('div[id="headerButtons"] > a', a => a.href);
         logger.debug(`Actual Link : ` + link2);
 
-
- 
         await page.click('div[id="headerButtons"] > a');
         
-        
-        const uuid = uuidv4();
-        console.log('uuid: ', uuid + '-' + '.......')
-        const fileName =  'doc-' + uuid + '-' + await page.$eval('h4[id="panelHeadingText"] > span', span => span.textContent);;
-        console.log("uuid - fileName: ", fileName);
+        const fileName = await page.$eval('h4[id="panelHeadingText"] > span', span => span.textContent);
+        const destinationFileName = uuidv4() + "-" + fileName;
         for (i=0 ; i < 15 ; i++)
         {
             await page.waitForTimeout(1000);
-            console.log('loop: ', path.join(downloadFolder, fileName));
-            console.log("loop: ", path.join(destinationFolder, fileName));
             if (await fileExists(path.join(downloadFolder , fileName)))
             {
                 await page.waitForTimeout(1000);
-                shell.mv(path.join(downloadFolder , fileName), path.join(destinationFolder , fileName));
+                
+                shell.mv(path.join(downloadFolder , fileName), path.join(destinationFolder, destinationFileName));
                 break;
             }
         }
@@ -90,10 +84,10 @@ module.exports =  async function (linkAdress) {
         await browser.close();
         isBrowsing = false;
 
-        if (await fileExists(path.join(destinationFolder , fileName)))
+        if (await fileExists(path.join(destinationFolder , destinationFileName)))
         {
-            console.log("return: ", path.join(destinationFolder, fileName));
-            return path.join(destinationFolder, fileName);
+            shell.rm(path.join(downloadFolder , fileName));
+            return path.join(destinationFolder, destinationFileName);
         }
         else
         {
