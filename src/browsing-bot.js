@@ -99,7 +99,11 @@ module.exports =  async function (linkAdress) {
         (span) => span.textContent
       );
       const destinationFileName = uuidv4() + "-" + fileName;
+      console.log('filename:',fileName)
+      console.log('destination filename:' , destinationFileName );
+
       for (i = 0; i < 15; i++) {
+        await page.waitForTimeout(1000);
         if (await fileExists(path.join(downloadFolder, fileName))) {
           shell.mv(
             path.join(downloadFolder, fileName),
