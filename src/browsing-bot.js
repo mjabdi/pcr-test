@@ -59,13 +59,22 @@ module.exports =  async function (linkAdress) {
       await page.waitForNavigation();
       console.log("Login button clicked successfully.");
       const continueLinkSelector = 'a[title="Continue"]';
-      await page.waitForSelector(continueLinkSelector, { timeout: 10000 });
-      console.log("Continue link found. Clicking...");
-      await page.click(continueLinkSelector);
-      console.log(
-        "Continue link clicked. Waiting for the next page to load..."
-      );
-      await page.waitForNavigation({ waitUntil: "networkidle2" });
+      try {
+        // Check if the selector exists within the timeout
+        await page.waitForSelector(continueLinkSelector, { timeout: 10000 });
+        console.log("Continue link found. Clicking...");
+        await page.click(continueLinkSelector);
+        console.log(
+          "Continue link clicked. Waiting for the next page to load..."
+        );
+        await page.waitForNavigation({ waitUntil: "networkidle2" });
+      } catch (error) {
+        if (error.name === "TimeoutError") {
+          console.log("Continue link not found. Proceeding without clicking.");
+        } else {
+          throw error; // Rethrow if it's an unexpected error
+        }
+      }
       const pdfLinkSelector = "a.attachment-container-border";
       await page.waitForSelector(pdfLinkSelector, { timeout: 20000 });
       console.log("PDF link found. Clicking...");
