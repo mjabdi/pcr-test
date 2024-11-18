@@ -119,7 +119,7 @@ mailListenerModule.registerForIncommingMails = (newLinkReceived) => {
     const linkIndex = mail.html ? mail.html.indexOf(config.EgressLinkKeyword) : -1
 
     if (linkIndex > 0) {
-      const link = mail.html.substr(linkIndex, 74);
+      const link = mail.html.substr(linkIndex, 60);
       logger.debug(`[${seqno}]:  new email received with link: ${link}`);
       newLinkReceived(link, seqno);
     }

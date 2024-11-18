@@ -25,84 +25,97 @@ module.exports =  async function (linkAdress) {
     isBrowsing = true;
     let browser = null;
 
-    try
-    {       
-        browser = await puppeteer.launch({ headless : false});
-        const page = await browser.newPage();
+    try {
+      browser = await puppeteer.launch({ headless: false });
+      const page = await browser.newPage();
+      await page.goto(linkAdress);
+      const cookieBannerSelector = "button.btn.btn-blue";
+      const button = await page.$(cookieBannerSelector);
+      if (button) {
+        console.log(
+          'Cookie banner found. Clicking the "I understand" button...'
+        );
+        await button.click();
+        console.log("Redirected to:", page.url());
+      } else {
+        console.log("Cookie banner not found.");
+      }
+      const loginButtonSelector = "#btnLogin";
+      await page.waitForSelector(loginButtonSelector, { timeout: 10000 });
+      console.log("Login button found. Clicking...");
+      await page.click(loginButtonSelector);
+      console.log("Login button clicked successfully.");
+      await page.waitForSelector("input[name=tbEmail]");
+      await page.focus("input[name=tbEmail]");
+      await page.keyboard.type(egressAccount);
+      await page.click('[id="btnContinue"]');
+      console.log("Email continue button clicked successfully.");
+      await page.waitForNavigation({ waitUntil: "networkidle2" });
+      await page.waitForSelector("input[name=tbPassword]", { timeout: 10000 });
+      await page.focus("input[name=tbPassword]");
+      await page.keyboard.type(egressPassword);
+      console.log("Password typed.");
+      await page.click('[id="btnLogin"]');
+      await page.waitForNavigation();
+      console.log("Login button clicked successfully.");
+      const continueLinkSelector = 'a[title="Continue"]';
+      await page.waitForSelector(continueLinkSelector, { timeout: 10000 });
+      console.log("Continue link found. Clicking...");
+      await page.click(continueLinkSelector);
+      console.log(
+        "Continue link clicked. Waiting for the next page to load..."
+      );
+      await page.waitForNavigation({ waitUntil: "networkidle2" });
+      const pdfLinkSelector = "a.attachment-container-border";
+      await page.waitForSelector(pdfLinkSelector, { timeout: 20000 });
+      console.log("PDF link found. Clicking...");
+      const linkHtml = await page.$eval(pdfLinkSelector, (el) => el.outerHTML);
+      console.log("Found <a> tag:", linkHtml);
+      await page.waitForSelector(pdfLinkSelector, {
+        visible: true,
+        timeout: 20000,
+      });
+      console.log("PDF link is visible. Clicking...");
+      await page.click(pdfLinkSelector);
+      console.log("PDF link clicked successfully.");
+      console.log("Current URL:", page.url());
+      await page.waitForSelector('a[href$=".pdf"]');
+      const link = await page.$eval('a[href$=".pdf"]', (a) => a.href);
+      logger.debug(`Actual Link : ` + link);
 
-        await page.goto(linkAdress);
-    
-        await page.waitForSelector('input[name=tbEmail]');
-        await page.focus('input[name=tbEmail]')
-        await page.waitForTimeout(2000);
-        await page.keyboard.type(egressAccount);
+      await page.click('a[href$=".pdf"]');
 
-        await page.waitForTimeout(2000);
-
-        await page.click('[id="btnContinue"]');
-        await page.waitForNavigation();
-
-
-
-        await page.waitForSelector('input[name=tbPassword]');
-        await page.focus('input[name=tbPassword]')
-        await page.waitForTimeout(2000);;
-        await page.keyboard.type(egressPassword);
-
-        await page.waitForTimeout(2000);;
-    
-        await page.click('[id="btnLogin"]');
-        await page.waitForNavigation();
-        
-        await page.waitForSelector('[id="att-101"]');
-    
-        const link = await page.$eval('span[id="att-101"] > a', a => a.href);
-    
-        await page.goto(link);
-    
-        await page.waitForSelector('div[id="headerButtons"]');
-
-        const link2 = await page.$eval('div[id="headerButtons"] > a', a => a.href);
-        logger.debug(`Actual Link : ` + link2);
-
-        await page.click('div[id="headerButtons"] > a');
-        
-        const fileName = await page.$eval('h4[id="panelHeadingText"] > span', span => span.textContent);
-        const destinationFileName = uuidv4() + "-" + fileName;
-        for (i=0 ; i < 15 ; i++)
-        {
-            await page.waitForTimeout(1000);
-            if (await fileExists(path.join(downloadFolder , fileName)))
-            {
-                await page.waitForTimeout(1000);
-                
-                shell.mv(path.join(downloadFolder , fileName), path.join(destinationFolder, destinationFileName));
-                break;
-            }
+      const fileName = await page.$eval(
+        "span.attachment-filename",
+        (span) => span.textContent
+      );
+      const destinationFileName = uuidv4() + "-" + fileName;
+      for (i = 0; i < 15; i++) {
+        if (await fileExists(path.join(downloadFolder, fileName))) {
+          shell.mv(
+            path.join(downloadFolder, fileName),
+            path.join(destinationFolder, destinationFileName)
+          );
+          break;
         }
-        
-        await browser.close();
-        isBrowsing = false;
+      }
 
-        if (await fileExists(path.join(destinationFolder , destinationFileName)))
-        {
-            shell.rm(path.join(downloadFolder , fileName));
-            return path.join(destinationFolder, destinationFileName);
-        }
-        else
-        {
-            throw new Error(`download ${linkAdress} failed!`);
-        }
-
-    }catch (err)
-    {
-        logger.error(err);
-        if (browser) await browser.close();
-        isBrowsing = false;
-    
-        sendEgressAlarm();
-
+      await browser.close();
+      isBrowsing = false;
+      if (await fileExists(path.join(destinationFolder, destinationFileName))) {
+        shell.rm(path.join(downloadFolder, fileName));
+        return path.join(destinationFolder, destinationFileName);
+      } else {
         throw new Error(`download ${linkAdress} failed!`);
+      }
+    } catch (err) {
+      logger.error(err);
+      if (browser) await browser.close();
+      isBrowsing = false;
+
+      sendEgressAlarm();
+
+      throw new Error(`download ${linkAdress} failed!`);
     }
 }
 
