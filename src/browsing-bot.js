@@ -4,9 +4,16 @@ const shell = require('shelljs');
 const config = require('config');
 const logger = require('./utils/logger')();
 const path = require('path');
+const AWS = require("aws-sdk");
 const {sendEgressAlarm} = require('./utils/alarm');
 const { v4: uuidv4 } = require("uuid");
 
+const s3 = new AWS.S3({
+  endpoint: config.S3Endpoint,
+  accessKeyId: config.S3AccessKey,
+  secretAccessKey: config.S3SecretKey,
+  region: "lon1"
+});
 
 const downloadFolder = config.ChromeDownloadFolderPath;
 const destinationFolder = config.DownloadFolderPath;
@@ -117,6 +124,12 @@ module.exports =  async function (linkAdress) {
       isBrowsing = false;
       if (await fileExists(path.join(destinationFolder, destinationFileName))) {
         shell.rm(path.join(downloadFolder, fileName));
+        // Upload to S3
+        const s3BucketName = config.S3BucketName;
+        const s3Key = `uploads/${destinationFileName}`;
+        await uploadToS3(localFilePath, s3BucketName, s3Key);
+        console.log("File uploaded to S3 successfully.");
+
         return path.join(destinationFolder, destinationFileName);
       } else {
         throw new Error(`download ${linkAdress} failed!`);
@@ -130,6 +143,24 @@ module.exports =  async function (linkAdress) {
 
       throw new Error(`download ${linkAdress} failed!`);
     }
+}
+
+async function uploadToS3(filePath, bucketName, keyName) {
+  try {
+    const fileContent = fs.readFileSync(filePath);
+    const params = {
+      Bucket: bucketName,
+      Key: keyName,
+      Body: fileContent,
+      ACL: "private", // Ensure the file is private
+    };
+
+    const data = await s3.upload(params).promise();
+    console.log(`File uploaded successfully to S3: ${data.Location}`);
+  } catch (error) {
+    console.error("Error uploading to S3:", error);
+    throw error;
+  }
 }
 
   function sleep(ms) {

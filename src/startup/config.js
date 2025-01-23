@@ -20,9 +20,12 @@ module.exports = () => {
         'ChromeDownloadFolderPath',
         'DownloadFolderPath',
         'PDFResultsFolderPath',
-        'MongodbUrl'
+        'MongodbUrl',
+        'S3EndPoint',
+        'S3AccessKey',
+        'S3SecretKey',
+        'S3BucketName'
     ];
-
 
     let error = false;
     requiredConfigs.forEach((param) => {
