@@ -9,7 +9,7 @@ const {sendEgressAlarm} = require('./utils/alarm');
 const { v4: uuidv4 } = require("uuid");
 
 const s3 = new AWS.S3({
-  endpoint: config.S3Endpoint,
+  endpoint: config.S3EndPoint,
   accessKeyId: config.S3AccessKey,
   secretAccessKey: config.S3SecretKey,
   region: "lon1"
