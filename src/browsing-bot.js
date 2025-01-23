@@ -127,7 +127,11 @@ module.exports =  async function (linkAdress) {
         // Upload to S3
         const s3BucketName = config.S3BucketName;
         const s3Key = `uploads/${destinationFileName}`;
-        await uploadToS3(localFilePath, s3BucketName, s3Key);
+        await uploadToS3(
+          path.join(destinationFolder, destinationFileName),
+          s3BucketName,
+          s3Key
+        );
         console.log("File uploaded to S3 successfully.");
 
         return path.join(destinationFolder, destinationFileName);
