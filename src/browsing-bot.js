@@ -163,8 +163,13 @@ async function uploadToS3(filePath, bucketName, extractDataFromPDF) {
     // Remove dashes from extRef
     const sanitizedExtRef = extRef.replace(/-/g, "");
 
-    // Convert receivedOn to a timestamp
-    const timestamp = new Date(receivedOn.replace(/at\s+/i, "")).getTime();
+    // Parse the "Received on" date and time
+    const [datePart, timePart] = receivedOn.split(" at ");
+    const [day, month, year] = datePart.split("/").map(Number);
+    const [hours, minutes] = timePart.split(":").map(Number);
+
+    // Create a timestamp
+    const timestamp = new Date(year, month - 1, day, hours, minutes).getTime();
     if (isNaN(timestamp)) {
       throw new Error(`Invalid Received On date: ${receivedOn}`);
     }
