@@ -175,7 +175,7 @@ async function uploadToS3(filePath, bucketName, extractDataFromPDF) {
     }
 
     // Format the filename using sanitizedExtRef and timestamp
-    const keyName = `medex-${sanitizedExtRef}-${timestamp}-${uuidv4()}.pdf`;
+    const keyName = `${sanitizedExtRef}-${timestamp}-${uuidv4()}.pdf`;
 
     // Read the file content
     const fileContent = fs.readFileSync(filePath);
