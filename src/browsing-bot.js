@@ -7,6 +7,7 @@ const path = require('path');
 const AWS = require("aws-sdk");
 const {sendEgressAlarm} = require('./utils/alarm');
 const { v4: uuidv4 } = require("uuid");
+const PdfReader = require("pdfreader").PdfReader;
 
 const s3 = new AWS.S3({
   endpoint: config.S3EndPoint,
@@ -130,7 +131,7 @@ module.exports =  async function (linkAdress) {
         await uploadToS3(
           path.join(destinationFolder, destinationFileName),
           s3BucketName,
-          s3Key
+          extractDataFromPDF
         );
         console.log("File uploaded to S3 successfully.");
 
@@ -149,9 +150,32 @@ module.exports =  async function (linkAdress) {
     }
 }
 
-async function uploadToS3(filePath, bucketName, keyName) {
+async function uploadToS3(filePath, bucketName, extractDataFromPDF) {
   try {
+    // Extract data from the PDF
+    const { extRef, receivedOn } = await extractDataFromPDF(filePath);
+    console.log("Extracted Data:", { extRef, receivedOn });
+
+    if (!extRef || !receivedOn) {
+      throw new Error("Failed to extract Ext Ref or Received On from PDF.");
+    }
+
+    // Remove dashes from extRef
+    const sanitizedExtRef = extRef.replace(/-/g, "");
+
+    // Convert receivedOn to a timestamp
+    const timestamp = new Date(receivedOn.replace(/at\s+/i, "")).getTime();
+    if (isNaN(timestamp)) {
+      throw new Error(`Invalid Received On date: ${receivedOn}`);
+    }
+
+    // Format the filename using sanitizedExtRef and timestamp
+    const keyName = `medex-${sanitizedExtRef}-${timestamp}-${uuidv4()}.pdf`;
+
+    // Read the file content
     const fileContent = fs.readFileSync(filePath);
+
+    // Set S3 parameters
     const params = {
       Bucket: bucketName,
       Key: keyName,
@@ -159,11 +183,13 @@ async function uploadToS3(filePath, bucketName, keyName) {
       ACL: "private", // Ensure the file is private
     };
 
-    const data = await s3.upload(params).promise();
-    console.log(`File uploaded successfully to S3: ${data.Location}`);
-  } catch (error) {
-    console.error("Error uploading to S3:", error);
-    throw error;
+    // Upload to S3
+    const uploadResponse = await s3.upload(params).promise();
+    console.log(`File uploaded successfully to S3: ${uploadResponse.Location}`);
+    return uploadResponse.Location;
+  } catch (err) {
+    console.error("Error:", err);
+    throw err;
   }
 }
 
@@ -172,3 +198,38 @@ async function uploadToS3(filePath, bucketName, keyName) {
 }
 
 const fileExists = async path => !!(await fs.promises.stat(path).catch(e => false));
+
+function extractDataFromPDF(pdfPath) {
+  return new Promise((resolve, reject) => {
+    const results = {
+      extRef: null,
+      receivedOn: null,
+    };
+
+    let pageText = "";
+
+    new PdfReader().parseFileItems(pdfPath, (err, item) => {
+      if (err) {
+        reject(err);
+      } else if (!item) {
+        // End of file
+        const extRefMatch = pageText.match(/Ext Ref\s+([\d\-]+)/);
+        const receivedOnMatch = pageText.match(
+          /Received on\s+([\d/]+\s+at\s+\d{2}:\d{2})/
+        );
+
+        if (extRefMatch) {
+          results.extRef = extRefMatch[1];
+        }
+        if (receivedOnMatch) {
+          results.receivedOn = receivedOnMatch[1];
+        }
+
+        resolve(results);
+      } else if (item.text) {
+        // Accumulate text from the page
+        pageText += `${item.text} `;
+      }
+    });
+  });
+}
