@@ -128,13 +128,17 @@ module.exports =  async function (linkAdress) {
         // Upload to S3
         const s3BucketName = config.S3BucketName;
         const s3Key = `uploads/${destinationFileName}`;
-        await uploadToS3(
-          path.join(destinationFolder, destinationFileName),
-          s3BucketName,
-          extractDataFromPDF
-        );
-        console.log("File uploaded to S3 successfully.");
-
+        try {
+          await uploadToS3(
+            path.join(destinationFolder, destinationFileName),
+            s3BucketName,
+            extractDataFromPDF
+          );
+          console.log("File uploaded to S3 successfully.");
+        } catch (uploadError) {
+          console.error("Upload to S3 failed:", uploadError);
+          logger.error("Upload to S3 failed:", uploadError);
+        }
         return path.join(destinationFolder, destinationFileName);
       } else {
         throw new Error(`download ${linkAdress} failed!`);
