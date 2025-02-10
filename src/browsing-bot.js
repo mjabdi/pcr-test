@@ -226,8 +226,13 @@ function extractDataFromPDF(pdfPath) {
         if (extRefMatch) {
           results.extRef = extRefMatch[1];
         }
+        else{
+          results.extRef = '000000000';
+        }
         if (receivedOnMatch) {
           results.receivedOn = receivedOnMatch[1];
+        }else{
+          results.receivedOn = "12/31/2000 at 00:00";
         }
 
         resolve(results);
