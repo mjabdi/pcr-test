@@ -122,6 +122,12 @@ module.exports =  async function (linkAdress) {
     await page.waitForNavigation();
     printPageText(page, "4");
     savePageHtml(page, "4");
+    const elementHandle = await page.$("preview-page");
+    await elementHandle.screenshot({ path: "preview-page.png" });
+    console.log('screenshot saved!')
+    await page.waitForSelector("preview-page", {
+      visible: true,
+    });
     const pdfLinkSelector = "a.attachment-container-border";
     await page.waitForSelector(pdfLinkSelector, { timeout: 20000 });
     console.log("PDF link found. Clicking...");
