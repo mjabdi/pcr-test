@@ -58,7 +58,7 @@ module.exports =  async function (linkAdress) {
     await new Promise((resolve) => setTimeout(resolve, 4000));
 
     // Get only the visible text from the page
-    // await page.waitForNavigation({ waitUntil: "networkidle0" });
+    await page.waitForNavigation({ waitUntil: "networkidle0" });
     printPageText(page, '2');
     const loginButtonSelector = "a.primary.defaultState.defaultSize";
     await page.waitForSelector(loginButtonSelector, { timeout: 10000 });
