@@ -42,20 +42,20 @@ module.exports =  async function (linkAdress) {
     console.log("----------------------------------");
   }
   try {
-    browser = await puppeteer.launch({ headless: false });
+    browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
     await page.goto(linkAdress);
-    // const cookieBannerSelector = "button.btn.btn-blue";
-    // const button = await page.$(cookieBannerSelector);
-    // if (button) {
-    //   console.log('Cookie banner found. Clicking the "I understand" button...');
-    //   printPageText(page, '1');
-    //   await button.click();
-    //   console.log("Redirected to:", page.url());
-    // } else {
-    //   console.log("Cookie banner not found.");
-    // }
-    // await new Promise((resolve) => setTimeout(resolve, 10000));
+    const cookieBannerSelector = "button.btn.btn-blue";
+    const button = await page.$(cookieBannerSelector);
+    if (button) {
+      console.log('Cookie banner found. Clicking the "I understand" button...');
+      printPageText(page, '1');
+      await button.click();
+      console.log("Redirected to:", page.url());
+    } else {
+      console.log("Cookie banner not found.");
+    }
+    await new Promise((resolve) => setTimeout(resolve, 10000));
 
     // Get only the visible text from the page
     printPageText(page, '2');
