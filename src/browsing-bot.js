@@ -55,23 +55,31 @@ module.exports =  async function (linkAdress) {
     const button = await page.$(cookieBannerSelector);
     if (button) {
       console.log('Cookie banner found. Clicking the "I understand" button...');
-      printPageText(page, '1');
-      savePageHtml(page, '1')
+      printPageText(page, "1");
+      savePageHtml(page, "1");
       await button.click();
       console.log("Redirected to:", page.url());
     } else {
       console.log("Cookie banner not found.");
     }
     await new Promise((resolve) => setTimeout(resolve, 10000));
+    
+    // Extract the sign-in link from the welcome-page element
+    const signInLink = await page.evaluate(() => {
+      const element = document.querySelector("welcome-page");
+      return element ? element.getAttribute("sign-in-link") : null;
+    });
 
+    if (signInLink) {
+      const fullUrl = new URL(signInLink, page.url()).href;
+      console.log("Redirecting to:", fullUrl);
+      await page.goto(fullUrl);
+    } else {
+      console.log("Sign-in link not found.");
+    }
     // Get only the visible text from the page
-    printPageText(page, '2');
-    savePageHtml(page, '2');
-    const loginButtonSelector = "a.primary.defaultState.defaultSize";
-    await page.waitForSelector(loginButtonSelector, { timeout: 10000 });
-    console.log("Login button found. Clicking...");
-    await page.click(loginButtonSelector);
-    console.log("Login button clicked successfully.");
+    printPageText(page, "2");
+    savePageHtml(page, "2");
     await page.waitForSelector("input[name=tbEmail]");
     await page.focus("input[name=tbEmail]");
     await page.keyboard.type(egressAccount);
