@@ -48,7 +48,7 @@ module.exports =  async function (linkAdress) {
     console.log(`HTML saved to ${fileName}`);
   }
   try {
-    browser = await puppeteer.launch({ headless: true });
+    browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
     await page.goto(linkAdress);
     const cookieBannerSelector = "button.btn.btn-blue";
