@@ -97,6 +97,8 @@ module.exports =  async function (linkAdress) {
     const continueLinkSelector = 'a[title="Continue"]';
     try {
       // Check if the selector exists within the timeout
+      printPageText(page, "3");
+      savePageHtml(page, "3");
       await page.waitForSelector(continueLinkSelector, { timeout: 10000 });
       console.log("Continue link found. Clicking...");
       await page.click(continueLinkSelector);
