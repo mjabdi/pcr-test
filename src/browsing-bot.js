@@ -122,6 +122,7 @@ module.exports =  async function (linkAdress) {
     await page.waitForNavigation();
     printPageText(page, "4");
     savePageHtml(page, "4");
+    await page.waitForNavigation();
     const elementHandle = await page.$("preview-page");
     await elementHandle.screenshot({ path: "preview-page.png" });
     console.log('screenshot saved!')
