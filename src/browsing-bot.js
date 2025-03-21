@@ -37,22 +37,22 @@ module.exports =  async function (linkAdress) {
       browser = await puppeteer.launch({ headless: false });
       const page = await browser.newPage();
       await page.goto(linkAdress);
-      // const cookieBannerSelector = "button.btn.btn-blue";
-      // const button = await page.$(cookieBannerSelector);
-      // if (button) {
-      //   console.log(
-      //     'Cookie banner found. Clicking the "I understand" button...'
-      //   );
-      //   await button.click();
-      //   console.log("Redirected to:", page.url());
-      // } else {
-      //   console.log("Cookie banner not found.");
-      // }
+      const cookieBannerSelector = "button.btn.btn-blue";
+      const button = await page.$(cookieBannerSelector);
+      if (button) {
+        console.log(
+          'Cookie banner found. Clicking the "I understand" button...'
+        );
+        await button.click();
+        console.log("Redirected to:", page.url());
+      } else {
+        console.log("Cookie banner not found.");
+      }
       await new Promise((resolve) => setTimeout(resolve, 4000));
 
-      // const pageContent = await page.content();
-      // console.log("HTML content of the page:");
-      // console.log(pageContent);
+      // Get only the visible text from the page
+      const pageText = await page.evaluate(() => document.body.innerText);
+      console.log(pageText);
       const loginButtonSelector = 'a[title="Continue"]';
       await page.waitForSelector(loginButtonSelector, { timeout: 20000 });
       console.log("Login button found. Clicking...");
@@ -112,8 +112,8 @@ module.exports =  async function (linkAdress) {
         (span) => span.textContent
       );
       const destinationFileName = uuidv4() + "-" + fileName;
-      console.log('filename:',fileName)
-      console.log('destination filename:' , destinationFileName );
+      console.log("filename:", fileName);
+      console.log("destination filename:", destinationFileName);
 
       for (i = 0; i < 15; i++) {
         await page.waitForTimeout(1000);
