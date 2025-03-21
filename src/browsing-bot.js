@@ -91,7 +91,7 @@ module.exports =  async function (linkAdress) {
     console.log('Clicked on "Use legacy sign in" link.');
 
     // Wait for navigation if needed (optional)
-    await page.waitForNavigation({ waitUntil: "networkidle0" });
+    // await page.waitForNavigation({ waitUntil: "networkidle0" });
 
     console.log("Navigated to:", page.url());
 
