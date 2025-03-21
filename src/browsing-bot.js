@@ -48,11 +48,11 @@ module.exports =  async function (linkAdress) {
       } else {
         console.log("Cookie banner not found.");
       }
-      const loginButtonSelector = "#btnLogin";
-      await page.waitForSelector(loginButtonSelector, { timeout: 10000 });
-      console.log("Login button found. Clicking...");
-      await page.click(loginButtonSelector);
-      console.log("Login button clicked successfully.");
+      // const loginButtonSelector = "#btnLogin";
+      // await page.waitForSelector(loginButtonSelector, { timeout: 10000 });
+      // console.log("Login button found. Clicking...");
+      // await page.click(loginButtonSelector);
+      // console.log("Login button clicked successfully.");
       await page.waitForSelector("input[name=tbEmail]");
       await page.focus("input[name=tbEmail]");
       await page.keyboard.type(egressAccount);
