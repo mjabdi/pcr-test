@@ -38,19 +38,23 @@ module.exports =  async function (linkAdress) {
       const page = await browser.newPage();
       await page.goto(linkAdress);
       console.log("printing body texts 1 ...");
-      const pageText1 = await page.evaluate(() => document);
+      const pageText1 = await page.evaluate(() =>
+        document.body.innerText);
       console.log(pageText1);
-      // const cookieBannerSelector = "button.btn.btn-blue";
-      // const button = await page.$(cookieBannerSelector);
-      // if (button) {
-      //   console.log(
-      //     'Cookie banner found. Clicking the "I understand" button...'
-      //   );
-      //   await button.click();
-      //   console.log("Redirected to:", page.url());
-      // } else {
-      //   console.log("Cookie banner not found.");
-      // }
+      const cookieBannerSelector = "button.btn.btn-blue";
+      const button = await page.$(cookieBannerSelector);
+      if (button) {
+        console.log(
+          'Cookie banner found. Clicking the "I understand" button...'
+        );
+        console.log("printing body texts 1 ...");
+        const pageText1 = await page.evaluate(() => document);
+        console.log(pageText1);
+        await button.click();
+        console.log("Redirected to:", page.url());
+      } else {
+        console.log("Cookie banner not found.");
+      }
       await new Promise((resolve) => setTimeout(resolve, 4000));
 
       // Get only the visible text from the page
