@@ -24,148 +24,146 @@ const egressPassword = config.EgressPassword;
 let isBrowsing = false;
 
 module.exports =  async function (linkAdress) {
- 
-    while (isBrowsing)
-    {
-        await sleep(5000);
+  while (isBrowsing) {
+    await sleep(5000);
+  }
+
+  isBrowsing = true;
+  let browser = null;
+  // Helper function to print the visible text on the page
+  async function printPageText(page, step) {
+    const pageText = await page.evaluate(() => document.body.innerText.trim());
+    console.log(`--- Page Text at Step: ${step} ---`);
+    if (pageText) {
+      console.log(pageText);
+    } else {
+      console.log("[No visible text found]");
     }
-    
-    isBrowsing = true;
-    let browser = null;
+    console.log("----------------------------------");
+  }
+  try {
+    browser = await puppeteer.launch({ headless: false });
+    const page = await browser.newPage();
+    await page.goto(linkAdress);
+    const cookieBannerSelector = "button.btn.btn-blue";
+    const button = await page.$(cookieBannerSelector);
+    if (button) {
+      console.log('Cookie banner found. Clicking the "I understand" button...');
+      printPageText(page, '1');
+      await button.click();
+      console.log("Redirected to:", page.url());
+    } else {
+      console.log("Cookie banner not found.");
+    }
+    await new Promise((resolve) => setTimeout(resolve, 4000));
 
+    // Get only the visible text from the page
+    // await page.waitForNavigation({ waitUntil: "networkidle0" });
+    printPageText(page, '2');
+    const loginButtonSelector = "a.primary.defaultState.defaultSize";
+    await page.waitForSelector(loginButtonSelector, { timeout: 10000 });
+    console.log("Login button found. Clicking...");
+    await page.click(loginButtonSelector);
+    console.log("Login button clicked successfully.");
+    await page.waitForSelector("input[name=tbEmail]");
+    await page.focus("input[name=tbEmail]");
+    await page.keyboard.type(egressAccount);
+    await page.click('[id="btnContinue"]');
+    console.log("Email continue button clicked successfully.");
+    await page.waitForNavigation({ waitUntil: "networkidle2" });
+    await page.waitForSelector("input[name=tbPassword]", { timeout: 10000 });
+    await page.focus("input[name=tbPassword]");
+    await page.keyboard.type(egressPassword);
+    console.log("Password typed.");
+    await page.click('[id="btnLogin"]');
+    await page.waitForNavigation();
+    console.log("Login button clicked successfully.");
+    const continueLinkSelector = 'a[title="Continue"]';
     try {
-      browser = await puppeteer.launch({ headless: false });
-      const page = await browser.newPage();
-      await page.goto(linkAdress);
-      console.log("printing body texts 1 ...");
-      const pageText1 = await page.evaluate(() =>
-        document.body.innerText);
-      console.log(pageText1);
-      const cookieBannerSelector = "button.btn.btn-blue";
-      const button = await page.$(cookieBannerSelector);
-      if (button) {
-        console.log(
-          'Cookie banner found. Clicking the "I understand" button...'
-        );
-        console.log("printing body texts 1 ...");
-        const pageText1 = await page.evaluate(() => document);
-        console.log(pageText1);
-        await button.click();
-        console.log("Redirected to:", page.url());
-      } else {
-        console.log("Cookie banner not found.");
-      }
-      await new Promise((resolve) => setTimeout(resolve, 4000));
-
-      // Get only the visible text from the page
-      // await page.waitForNavigation({ waitUntil: "networkidle0" });
-      console.log('printing body texts 2 ...')
-      const pageText2 = await page.evaluate(() => document);
-      console.log(pageText2);
-      const loginButtonSelector = "a.primary.defaultState.defaultSize";
-      await page.waitForSelector(loginButtonSelector, { timeout: 10000 });
-      console.log("Login button found. Clicking...");
-      await page.click(loginButtonSelector);
-      console.log("Login button clicked successfully.");
-      await page.waitForSelector("input[name=tbEmail]");
-      await page.focus("input[name=tbEmail]");
-      await page.keyboard.type(egressAccount);
-      await page.click('[id="btnContinue"]');
-      console.log("Email continue button clicked successfully.");
-      await page.waitForNavigation({ waitUntil: "networkidle2" });
-      await page.waitForSelector("input[name=tbPassword]", { timeout: 10000 });
-      await page.focus("input[name=tbPassword]");
-      await page.keyboard.type(egressPassword);
-      console.log("Password typed.");
-      await page.click('[id="btnLogin"]');
-      await page.waitForNavigation();
-      console.log("Login button clicked successfully.");
-      const continueLinkSelector = 'a[title="Continue"]';
-      try {
-        // Check if the selector exists within the timeout
-        await page.waitForSelector(continueLinkSelector, { timeout: 10000 });
-        console.log("Continue link found. Clicking...");
-        await page.click(continueLinkSelector);
-        console.log(
-          "Continue link clicked. Waiting for the next page to load..."
-        );
-        await page.waitForNavigation({ waitUntil: "networkidle2" });
-      } catch (error) {
-        if (error.name === "TimeoutError") {
-          console.log("Continue link not found. Proceeding without clicking.");
-        } else {
-          throw error; // Rethrow if it's an unexpected error
-        }
-      }
-      const pdfLinkSelector = "a.attachment-container-border";
-      await page.waitForSelector(pdfLinkSelector, { timeout: 20000 });
-      console.log("PDF link found. Clicking...");
-      const linkHtml = await page.$eval(pdfLinkSelector, (el) => el.outerHTML);
-      console.log("Found <a> tag:", linkHtml);
-      await page.waitForSelector(pdfLinkSelector, {
-        visible: true,
-        timeout: 20000,
-      });
-      console.log("PDF link is visible. Clicking...");
-      await page.click(pdfLinkSelector);
-      console.log("PDF link clicked successfully.");
-      console.log("Current URL:", page.url());
-      await page.waitForSelector('a[href$=".pdf"]');
-      const link = await page.$eval('a[href$=".pdf"]', (a) => a.href);
-      logger.debug(`Actual Link : ` + link);
-
-      await page.click('a[href$=".pdf"]');
-
-      const fileName = await page.$eval(
-        "span.attachment-filename",
-        (span) => span.textContent
+      // Check if the selector exists within the timeout
+      await page.waitForSelector(continueLinkSelector, { timeout: 10000 });
+      console.log("Continue link found. Clicking...");
+      await page.click(continueLinkSelector);
+      console.log(
+        "Continue link clicked. Waiting for the next page to load..."
       );
-      const destinationFileName = uuidv4() + "-" + fileName;
-      console.log("filename:", fileName);
-      console.log("destination filename:", destinationFileName);
-
-      for (i = 0; i < 15; i++) {
-        await page.waitForTimeout(1000);
-        if (await fileExists(path.join(downloadFolder, fileName))) {
-          shell.mv(
-            path.join(downloadFolder, fileName),
-            path.join(destinationFolder, destinationFileName)
-          );
-          break;
-        }
-      }
-
-      await browser.close();
-      isBrowsing = false;
-      if (await fileExists(path.join(destinationFolder, destinationFileName))) {
-        shell.rm(path.join(downloadFolder, fileName));
-        // Upload to S3
-        const s3BucketName = config.S3BucketName;
-        const s3Key = `uploads/${destinationFileName}`;
-        try {
-          await uploadToS3(
-            path.join(destinationFolder, destinationFileName),
-            s3BucketName,
-            extractDataFromPDF
-          );
-          console.log("File uploaded to S3 successfully.");
-        } catch (uploadError) {
-          console.error("Upload to S3 failed:", uploadError);
-          logger.error("Upload to S3 failed:", uploadError);
-        }
-        return path.join(destinationFolder, destinationFileName);
+      await page.waitForNavigation({ waitUntil: "networkidle2" });
+    } catch (error) {
+      if (error.name === "TimeoutError") {
+        console.log("Continue link not found. Proceeding without clicking.");
       } else {
-        throw new Error(`download ${linkAdress} failed!`);
+        throw error; // Rethrow if it's an unexpected error
       }
-    } catch (err) {
-      logger.error(err);
-      if (browser) await browser.close();
-      isBrowsing = false;
+    }
+    const pdfLinkSelector = "a.attachment-container-border";
+    await page.waitForSelector(pdfLinkSelector, { timeout: 20000 });
+    console.log("PDF link found. Clicking...");
+    const linkHtml = await page.$eval(pdfLinkSelector, (el) => el.outerHTML);
+    console.log("Found <a> tag:", linkHtml);
+    await page.waitForSelector(pdfLinkSelector, {
+      visible: true,
+      timeout: 20000,
+    });
+    console.log("PDF link is visible. Clicking...");
+    await page.click(pdfLinkSelector);
+    console.log("PDF link clicked successfully.");
+    console.log("Current URL:", page.url());
+    await page.waitForSelector('a[href$=".pdf"]');
+    const link = await page.$eval('a[href$=".pdf"]', (a) => a.href);
+    logger.debug(`Actual Link : ` + link);
 
-      sendEgressAlarm();
+    await page.click('a[href$=".pdf"]');
 
+    const fileName = await page.$eval(
+      "span.attachment-filename",
+      (span) => span.textContent
+    );
+    const destinationFileName = uuidv4() + "-" + fileName;
+    console.log("filename:", fileName);
+    console.log("destination filename:", destinationFileName);
+
+    for (i = 0; i < 15; i++) {
+      await page.waitForTimeout(1000);
+      if (await fileExists(path.join(downloadFolder, fileName))) {
+        shell.mv(
+          path.join(downloadFolder, fileName),
+          path.join(destinationFolder, destinationFileName)
+        );
+        break;
+      }
+    }
+
+    await browser.close();
+    isBrowsing = false;
+    if (await fileExists(path.join(destinationFolder, destinationFileName))) {
+      shell.rm(path.join(downloadFolder, fileName));
+      // Upload to S3
+      const s3BucketName = config.S3BucketName;
+      const s3Key = `uploads/${destinationFileName}`;
+      try {
+        await uploadToS3(
+          path.join(destinationFolder, destinationFileName),
+          s3BucketName,
+          extractDataFromPDF
+        );
+        console.log("File uploaded to S3 successfully.");
+      } catch (uploadError) {
+        console.error("Upload to S3 failed:", uploadError);
+        logger.error("Upload to S3 failed:", uploadError);
+      }
+      return path.join(destinationFolder, destinationFileName);
+    } else {
       throw new Error(`download ${linkAdress} failed!`);
     }
+  } catch (err) {
+    logger.error(err);
+    if (browser) await browser.close();
+    isBrowsing = false;
+
+    sendEgressAlarm();
+
+    throw new Error(`download ${linkAdress} failed!`);
+  }
 }
 
 async function uploadToS3(filePath, bucketName, extractDataFromPDF) {
