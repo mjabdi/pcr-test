@@ -97,6 +97,7 @@ module.exports =  async function (linkAdress) {
     try {
       await page.waitForNavigation({ waitUntil: "networkidle0" });
       await page.waitForNavigation({ waitUntil: "networkidle0" });
+      await page.waitForNavigation({ waitUntil: "networkidle0" });
       await new Promise((resolve) => setTimeout(resolve, 10000));
       // Check if the selector exists within the timeout
       printPageText(page, "3");
