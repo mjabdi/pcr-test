@@ -51,10 +51,11 @@ module.exports =  async function (linkAdress) {
       await new Promise((resolve) => setTimeout(resolve, 4000));
 
       // Get only the visible text from the page
+      console.log('printing body texts ...')
       const pageText = await page.evaluate(() => document.body.innerText);
       console.log(pageText);
-      const loginButtonSelector = 'a[title="Continue"]';
-      await page.waitForSelector(loginButtonSelector, { timeout: 20000 });
+      const loginButtonSelector = "a.primary.defaultState.defaultSize";
+      await page.waitForSelector(loginButtonSelector, { timeout: 10000 });
       console.log("Login button found. Clicking...");
       await page.click(loginButtonSelector);
       console.log("Login button clicked successfully.");
