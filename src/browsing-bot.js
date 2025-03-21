@@ -48,7 +48,7 @@ module.exports =  async function (linkAdress) {
       } else {
         console.log("Cookie banner not found.");
       }
-      const loginButtonSelector = 'a[title="Continue"]';
+      const loginButtonSelector = 'a[href^="/intro/"][title="Continue"]';
       await page.waitForSelector(loginButtonSelector, { timeout: 10000 });
       console.log("Login button found. Clicking...");
       await page.click(loginButtonSelector);
