@@ -92,10 +92,10 @@ module.exports =  async function (linkAdress) {
     await page.keyboard.type(egressPassword);
     console.log("Password typed.");
     await page.click('[id="btnLogin"]');
-    await page.waitForNavigation();
+    // await page.waitForNavigation();
     console.log("Login button clicked successfully.");
     try {
-      await page.waitForNavigation({ waitUntil: "networkidle0" });
+      // await page.waitForNavigation({ waitUntil: "networkidle0" });
       const continueLinkSelector = 'a[title="Continue"]';
       // Check if the selector exists within the timeout
       printPageText(page, "3");
