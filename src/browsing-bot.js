@@ -53,9 +53,8 @@ module.exports =  async function (linkAdress) {
       // Get only the visible text from the page
       await page.waitForNavigation({ waitUntil: "networkidle0" });
       console.log('printing body texts ...')
-      const pageText = await page.evaluate(() => document.body.innerText);
+      const pageText = await page.evaluate(() => document.body);
       console.log(pageText);
-      await page.waitForNavigation({ waitUntil: "networkidle0" });
       const loginButtonSelector = "a.primary.defaultState.defaultSize";
       await page.waitForSelector(loginButtonSelector, { timeout: 10000 });
       console.log("Login button found. Clicking...");
