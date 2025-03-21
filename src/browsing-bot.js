@@ -38,7 +38,7 @@ module.exports =  async function (linkAdress) {
       const page = await browser.newPage();
       await page.goto(linkAdress);
       console.log("printing body texts 1 ...");
-      const pageText1 = await page.evaluate(() => document.body);
+      const pageText1 = await page.evaluate(() => document);
       console.log(pageText1);
       // const cookieBannerSelector = "button.btn.btn-blue";
       // const button = await page.$(cookieBannerSelector);
@@ -56,7 +56,7 @@ module.exports =  async function (linkAdress) {
       // Get only the visible text from the page
       // await page.waitForNavigation({ waitUntil: "networkidle0" });
       console.log('printing body texts 2 ...')
-      const pageText2 = await page.evaluate(() => document.body);
+      const pageText2 = await page.evaluate(() => document);
       console.log(pageText2);
       const loginButtonSelector = "a.primary.defaultState.defaultSize";
       await page.waitForSelector(loginButtonSelector, { timeout: 10000 });
