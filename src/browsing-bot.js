@@ -55,10 +55,9 @@ module.exports =  async function (linkAdress) {
     } else {
       console.log("Cookie banner not found.");
     }
-    await new Promise((resolve) => setTimeout(resolve, 4000));
+    await new Promise((resolve) => setTimeout(resolve, 10000));
 
     // Get only the visible text from the page
-    await page.waitForNavigation({ waitUntil: "networkidle0" });
     printPageText(page, '2');
     const loginButtonSelector = "a.primary.defaultState.defaultSize";
     await page.waitForSelector(loginButtonSelector, { timeout: 10000 });
