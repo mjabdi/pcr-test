@@ -37,24 +37,27 @@ module.exports =  async function (linkAdress) {
       browser = await puppeteer.launch({ headless: false });
       const page = await browser.newPage();
       await page.goto(linkAdress);
-      const cookieBannerSelector = "button.btn.btn-blue";
-      const button = await page.$(cookieBannerSelector);
-      if (button) {
-        console.log(
-          'Cookie banner found. Clicking the "I understand" button...'
-        );
-        await button.click();
-        console.log("Redirected to:", page.url());
-      } else {
-        console.log("Cookie banner not found.");
-      }
+      console.log("printing body texts 1 ...");
+      const pageText1 = await page.evaluate(() => document.body);
+      console.log(pageText1);
+      // const cookieBannerSelector = "button.btn.btn-blue";
+      // const button = await page.$(cookieBannerSelector);
+      // if (button) {
+      //   console.log(
+      //     'Cookie banner found. Clicking the "I understand" button...'
+      //   );
+      //   await button.click();
+      //   console.log("Redirected to:", page.url());
+      // } else {
+      //   console.log("Cookie banner not found.");
+      // }
       await new Promise((resolve) => setTimeout(resolve, 4000));
 
       // Get only the visible text from the page
       // await page.waitForNavigation({ waitUntil: "networkidle0" });
-      console.log('printing body texts ...')
-      const pageText = await page.evaluate(() => document.body);
-      console.log(pageText);
+      console.log('printing body texts 2 ...')
+      const pageText2 = await page.evaluate(() => document.body);
+      console.log(pageText2);
       const loginButtonSelector = "a.primary.defaultState.defaultSize";
       await page.waitForSelector(loginButtonSelector, { timeout: 10000 });
       console.log("Login button found. Clicking...");
