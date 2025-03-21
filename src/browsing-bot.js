@@ -65,17 +65,18 @@ module.exports =  async function (linkAdress) {
     await new Promise((resolve) => setTimeout(resolve, 10000));
 
     // Extract the sign-in link from the welcome-page element
-    const signInLink = await page.evaluate(() => {
-      const element = document.querySelector("welcome-page");
-      return element ? element.getAttribute("link") : null;
+    const link2 = await page.evaluate(() => {
+      const regex = /\/intro[^\s"]+/; // Regex to match any link that starts with "/intro"
+      const match = document.body.innerHTML.match(regex);
+      return match ? match[0] : null;
     });
 
-    if (signInLink) {
-      const fullUrl = new URL(signInLink, page.url()).href;
+    if (link2) {
+      const fullUrl = new URL(link2, page.url()).href;
       console.log("Redirecting to:", fullUrl);
-      await page.goto(fullUrl);
+      await page.goto(fullUrl); // Redirect to the found link
     } else {
-      console.log("Sign-in link not found.");
+      console.log('Link starting with "/intro" not found.');
     }
     // Get only the visible text from the page
     printPageText(page, "2");
