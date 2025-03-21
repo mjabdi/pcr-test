@@ -50,9 +50,9 @@ module.exports =  async function (linkAdress) {
       }
       await new Promise((resolve) => setTimeout(resolve, 4000));
 
-      const pageContent = await page.content();
-      console.log("HTML content of the page:");
-      console.log(pageContent);
+      // const pageContent = await page.content();
+      // console.log("HTML content of the page:");
+      // console.log(pageContent);
       const loginButtonSelector = 'a[title="Continue"]';
       await page.waitForSelector(loginButtonSelector, { timeout: 20000 });
       console.log("Login button found. Clicking...");
