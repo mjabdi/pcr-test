@@ -51,7 +51,7 @@ module.exports =  async function (linkAdress) {
       await new Promise((resolve) => setTimeout(resolve, 4000));
 
       // Get only the visible text from the page
-      await page.waitForNavigation({ waitUntil: "networkidle0" });
+      // await page.waitForNavigation({ waitUntil: "networkidle0" });
       console.log('printing body texts ...')
       const pageText = await page.evaluate(() => document.body);
       console.log(pageText);
