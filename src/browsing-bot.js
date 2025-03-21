@@ -98,6 +98,7 @@ module.exports =  async function (linkAdress) {
     await page.waitForSelector("input[name=tbEmail]");
     await page.focus("input[name=tbEmail]");
     await page.keyboard.type(egressAccount);
+    await new Promise((resolve) => setTimeout(resolve, 4000));
     // await page.click('[id="btnContinue"]');
     // console.log("Email continue button clicked successfully.");
     // await page.waitForNavigation({ waitUntil: "networkidle2" });
