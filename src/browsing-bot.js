@@ -123,8 +123,10 @@ module.exports =  async function (linkAdress) {
     printPageText(page, "4");
     savePageHtml(page, "4");
     await page.waitForNavigation();
+    await new Promise((resolve) => setTimeout(resolve, 10000));
     printPageText(page, "5");
     savePageHtml(page, "5");
+    await new Promise((resolve) => setTimeout(resolve, 10000));
     const pdfLinkSelector = "a.attachment-container-border";
     await page.waitForSelector(pdfLinkSelector, { timeout: 20000 });
     console.log("PDF link found. Clicking...");
