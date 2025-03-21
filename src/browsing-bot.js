@@ -63,11 +63,11 @@ module.exports =  async function (linkAdress) {
       console.log("Cookie banner not found.");
     }
     await new Promise((resolve) => setTimeout(resolve, 10000));
-    
+
     // Extract the sign-in link from the welcome-page element
     const signInLink = await page.evaluate(() => {
       const element = document.querySelector("welcome-page");
-      return element ? element.getAttribute("sign-in-link") : null;
+      return element ? element.getAttribute("link") : null;
     });
 
     if (signInLink) {
