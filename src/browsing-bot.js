@@ -95,7 +95,7 @@ module.exports =  async function (linkAdress) {
     // await page.waitForNavigation();
     console.log("Login button clicked successfully.");
     try {
-      // await page.waitForNavigation({ waitUntil: "networkidle0" });
+      await page.waitForNavigation({ waitUntil: "networkidle0" });
       const continueLinkSelector = 'a[title="Continue"]';
       // Check if the selector exists within the timeout
       printPageText(page, "3");
