@@ -96,10 +96,11 @@ module.exports =  async function (linkAdress) {
     console.log("Login button clicked successfully.");
     try {
       await page.waitForNavigation({ waitUntil: "networkidle0" });
-      const continueLinkSelector = 'a[title="Continue"]';
+      await new Promise((resolve) => setTimeout(resolve, 10000));
       // Check if the selector exists within the timeout
       printPageText(page, "3");
       savePageHtml(page, "3");
+      const continueLinkSelector = 'a[title="Continue"]';
       await page.waitForSelector(continueLinkSelector, { timeout: 10000 });
       console.log("Continue link found. Clicking...");
       await page.click(continueLinkSelector);
