@@ -37,17 +37,17 @@ module.exports =  async function (linkAdress) {
       browser = await puppeteer.launch({ headless: false });
       const page = await browser.newPage();
       await page.goto(linkAdress);
-      const cookieBannerSelector = "button.btn.btn-blue";
-      const button = await page.$(cookieBannerSelector);
-      if (button) {
-        console.log(
-          'Cookie banner found. Clicking the "I understand" button...'
-        );
-        await button.click();
-        console.log("Redirected to:", page.url());
-      } else {
-        console.log("Cookie banner not found.");
-      }
+      // const cookieBannerSelector = "button.btn.btn-blue";
+      // const button = await page.$(cookieBannerSelector);
+      // if (button) {
+      //   console.log(
+      //     'Cookie banner found. Clicking the "I understand" button...'
+      //   );
+      //   await button.click();
+      //   console.log("Redirected to:", page.url());
+      // } else {
+      //   console.log("Cookie banner not found.");
+      // }
       await new Promise((resolve) => setTimeout(resolve, 4000));
 
       // const pageContent = await page.content();
