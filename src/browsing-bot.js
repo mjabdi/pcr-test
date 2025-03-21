@@ -81,28 +81,41 @@ module.exports =  async function (linkAdress) {
     // Get only the visible text from the page
     printPageText(page, "2");
     savePageHtml(page, "2");
+    // Wait for the "Use legacy sign in" link to appear
+    const legacySignInSelector = "#hrOldSignIn";
+    await page.waitForSelector(legacySignInSelector);
+
+    // Click on the "Use legacy sign in" link
+    await page.click(legacySignInSelector);
+
+    console.log('Clicked on "Use legacy sign in" link.');
+
+    // Wait for navigation if needed (optional)
+    await page.waitForNavigation({ waitUntil: "networkidle0" });
+
+    console.log("Navigated to:", page.url());
+
     await page.waitForSelector("input[name=tbEmail]");
     await page.focus("input[name=tbEmail]");
     await page.keyboard.type(egressAccount);
-    await page.click('[id="btnContinue"]');
-    console.log("Email continue button clicked successfully.");
-    await page.waitForNavigation({ waitUntil: "networkidle2" });
+    // await page.click('[id="btnContinue"]');
+    // console.log("Email continue button clicked successfully.");
+    // await page.waitForNavigation({ waitUntil: "networkidle2" });
     await page.waitForSelector("input[name=tbPassword]", { timeout: 10000 });
     await page.focus("input[name=tbPassword]");
     await page.keyboard.type(egressPassword);
     console.log("Password typed.");
+    printPageText(page, "3");
+    savePageHtml(page, "3");
     await page.click('[id="btnLogin"]');
     // await page.waitForNavigation();
     console.log("Login button clicked successfully.");
     try {
       await page.waitForNavigation({ waitUntil: "networkidle0" });
       await new Promise((resolve) => setTimeout(resolve, 10000));
-      await page.waitForNavigation({ waitUntil: "networkidle0" });
-      await new Promise((resolve) => setTimeout(resolve, 10000));
-
       // Check if the selector exists within the timeout
-      printPageText(page, "3");
-      savePageHtml(page, "3");
+      printPageText(page, "4");
+      savePageHtml(page, "4");
       const continueLinkSelector = 'a[title="Continue"]';
       await page.waitForSelector(continueLinkSelector, { timeout: 10000 });
       console.log("Continue link found. Clicking...");
