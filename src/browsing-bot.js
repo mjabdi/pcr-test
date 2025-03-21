@@ -41,6 +41,12 @@ module.exports =  async function (linkAdress) {
     }
     console.log("----------------------------------");
   }
+  async function savePageHtml(page, step) {
+    const htmlContent = await page.content();
+    const fileName = `page_${step}.html`;
+    fs.writeFileSync(fileName, htmlContent);
+    console.log(`HTML saved to ${fileName}`);
+  }
   try {
     browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
@@ -50,6 +56,7 @@ module.exports =  async function (linkAdress) {
     if (button) {
       console.log('Cookie banner found. Clicking the "I understand" button...');
       printPageText(page, '1');
+      savePageHtml(page, '1')
       await button.click();
       console.log("Redirected to:", page.url());
     } else {
@@ -59,6 +66,7 @@ module.exports =  async function (linkAdress) {
 
     // Get only the visible text from the page
     printPageText(page, '2');
+    savePageHtml(page, '2');
     const loginButtonSelector = "a.primary.defaultState.defaultSize";
     await page.waitForSelector(loginButtonSelector, { timeout: 10000 });
     console.log("Login button found. Clicking...");
