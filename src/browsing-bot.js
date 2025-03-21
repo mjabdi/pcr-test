@@ -94,7 +94,6 @@ module.exports =  async function (linkAdress) {
     printPageText(page, "3");
     savePageHtml(page, "3");
     await page.click('[id="btnLogin"]');
-    // await page.waitForNavigation();
     console.log("Login button clicked successfully.");
     // try {
     //   await page.waitForNavigation({ waitUntil: "networkidle0" });
@@ -120,6 +119,9 @@ module.exports =  async function (linkAdress) {
     //     throw error; // Rethrow if it's an unexpected error
     //   }
     // }
+    await page.waitForNavigation();
+    printPageText(page, "4");
+    savePageHtml(page, "4");
     const pdfLinkSelector = "a.attachment-container-border";
     await page.waitForSelector(pdfLinkSelector, { timeout: 20000 });
     console.log("PDF link found. Clicking...");
