@@ -34,7 +34,16 @@ module.exports =  async function (linkAdress) {
     let browser = null;
 
     try {
-      browser = await puppeteer.launch({ headless: false });
+      browser = await puppeteer.launch({
+        headless: true,
+        executablePath: "/usr/bin/google-chrome-stable", // Path to Google Chrome
+        args: [
+          "--no-sandbox",
+          "--disable-setuid-sandbox",
+          "--disable-gpu",
+          "--remote-debugging-port=9222",
+        ],
+      });
       const page = await browser.newPage();
       await page.goto(linkAdress);
       const cookieBannerSelector = "button.btn.btn-blue";
